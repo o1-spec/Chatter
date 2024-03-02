@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.hero-bg {
+    background-image: url("/Images/Hero_bg.png");
+    background-size: cover;
+    object-fit: contain;
+    background-position: 50% 0%;
+    background-repeat: no-repeat;
+    filter: brightness(50%);
+}
