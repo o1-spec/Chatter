@@ -21,8 +21,8 @@ function Nav() {
         </li>
       </ul>
       <div className="flex items-center gap-4">
-        <Link to="/" className=" text-textBlue border text-sm border-textBlue px-6 py-2 rounded-lg">Login</Link>
-        <Link to="/" className="text-textWhite text-[15px] border bg-textBlue px-6 py-2 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300">Sign Up</Link>
+        <Link to="/login" className=" text-textBlue border text-sm border-textBlue px-6 py-2 rounded-lg">Login</Link>
+        <Link to="/signup" className="text-textWhite text-[15px] border bg-textBlue px-6 py-2 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300">Sign Up</Link>
       </div>
     </nav>
   );

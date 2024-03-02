@@ -10,3 +10,11 @@
     background-repeat: no-repeat;
     filter: brightness(50%);
 }
+
+.login-img{
+    background-image: url("/Images/Register_bg.png");
+    background-size: cover;
+    background-position: 30% 40%;
+    background-repeat: no-repeat;
+    filter: brightness(50%);
+}
