@@ -3,6 +3,7 @@ import Homepage from "./Components/pages/Homepage";
 import LoginPage from "./Components/pages/LoginPage";
 import Signup from "./Components/pages/Signup";
 import Confirmation from "./Components/pages/Confirmation";
+import Blog from "./Components/pages/Blog";
 
 const router = createBrowserRouter([
   {
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
     path: "/login",
     element: <LoginPage />,
   },
-  {
+  { 
     path: "/signup",
     element: <Signup />,
   },
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
     path: "/confirmation",
     element: <Confirmation />,
   },
+  {
+    path: "/blog",
+    element: <Blog/>
+  }
 ]);
 
 function App() {

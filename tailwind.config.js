@@ -9,7 +9,8 @@ export default {
       bgCream: "#FFEDCC",
       textWhite: "#ffffff",
       bgIcon: "#D6D1F8",
-      borderIcon : "#D0D0D0",
+      borderIcon: "#D0D0D0",
+      textRed: "#FF1400",
     },
     fontFamily: {
       dmSans: ["DM Sans", "sans-serif"],
