@@ -9,13 +9,13 @@ function Personal() {
         </h5>
         <ul className="flex flex-col gap-3.5 pl-6">
           <li>
-            <Link className="flex items-center w-fit gap-3 text-[15px]" to="/account">
+            <Link className="flex items-center w-fit gap-3 text-[15px]" to="/blog/account">
               <img src="/Images/account.svg" className="w-3" alt="Feed-img" />
               <span>Account</span>
             </Link>
           </li>
           <li>
-            <Link to="/notifications" className="flex items-center w-fit gap-3 text-[15px]">
+            <Link to="/blog/notification" className="flex items-center w-fit gap-3 text-[15px]">
               <img src="/Images/notifications.svg" alt="Bookmark" />
               <span>Notifications</span>
             </Link>
