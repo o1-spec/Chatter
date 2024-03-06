@@ -1,6 +1,6 @@
 import SignupForm from "../utilities/SignupForm";
 
-function Signup() {
+function Signup({ setActive, setUser }) {
   return (
     <div className="font-dmSans overflow-x-hidden">
       <div className="flex w-screen h-screen">
@@ -28,9 +28,9 @@ function Signup() {
             </div>
             <div className=" flex flex-col">
               <h4 className="text-3xl text-center pb-8 font-semibold">
-              Register as a Writer/Reader
+                Register as a Writer/Reader
               </h4>
-              <SignupForm />
+              <SignupForm setActive={setActive} setUser={setUser} />
             </div>
           </div>
         </div>

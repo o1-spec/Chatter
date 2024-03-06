@@ -1,9 +1,92 @@
-import { Link } from "react-router-dom";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../firebase";
+import { toast } from "react-toastify";
 
-function SignupForm() {
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+function SignupForm({ setActive, setUser }) {
+  const [state, setState] = useState(initialState);
+  //const [signUp, setSignUp] = useState(false);
+
+  const { email, password, firstName, lastName, confirmPassword } = state;
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
+
+  const handleAuth = async (e) => {
+    try {
+      e.preventDefault();
+      if (password !== confirmPassword) {
+        return toast.error("Password don't match", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      }
+      if (firstName && lastName && email && password) {
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+      } else {
+        return toast.error("All fields are mandatory to fill", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      }
+      navigate("/blog/feed");
+    } catch (error) {
+      const notify = () => {
+        toast.error(`${error.message}`, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      };
+      notify();
+    }
+  };
   return (
     <>
-      <form className="flex flex-col gap-6 pb-16">
+      <form className="flex flex-col gap-6 pb-16" onSubmit={handleAuth}>
         <div className="flex items-center gap-4 w-full">
           <div className=" flex gap-1 flex-col w-full">
             <label className="text-[14px]">First Name</label>
@@ -11,6 +94,9 @@ function SignupForm() {
               className="p-2 rounded-md w-[100%] placeholder:text-sm border border-borderIcon focus:outline-textBlue"
               type="text"
               placeholder="John"
+              name="firstName"
+              value={firstName}
+              onChange={handleChange}
             />
           </div>
           <div className=" flex gap-1 flex-col w-full">
@@ -19,6 +105,9 @@ function SignupForm() {
               className="p-2 rounded-md w-[100%] placeholder:text-sm border border-borderIcon focus:outline-textBlue"
               type="text"
               placeholder="Doe"
+              name="lastName"
+              value={lastName}
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -35,7 +124,10 @@ function SignupForm() {
           <input
             className="p-2 rounded-md w-[100%] placeholder:text-sm border border-borderIcon focus:outline-textBlue"
             type="email"
+            name="email"
             placeholder="johndoe@gmail.com"
+            value={email}
+            onChange={handleChange}
           />
         </div>
         <div className=" flex gap-1 flex-col">
@@ -45,6 +137,9 @@ function SignupForm() {
               className="p-2 rounded-md w-[100%] placeholder:text-sm border border-borderIcon focus:outline-textBlue"
               type="password"
               placeholder="********"
+              name="password"
+              value={password}
+              onChange={handleChange}
             />
             <img
               className="cursor-pointer absolute right-2 top-3"
@@ -60,6 +155,9 @@ function SignupForm() {
               className="p-2 rounded-md w-[100%] placeholder:text-sm border border-borderIcon focus:outline-textBlue"
               type="password"
               placeholder="********"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={handleChange}
             />
             <img
               className="cursor-pointer absolute right-2 top-3"

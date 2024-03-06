@@ -1,4 +1,8 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { useState, useEffect, createContext } from "react";
+import { auth } from "./firebase";
+import { signOut } from "firebase/auth";
+
 //import { Suspense, lazy } from "react";
 
 import Homepage from "./Components/pages/Homepage";
@@ -19,89 +23,80 @@ import Technology from "./Components/BlogPages/Trending/Technology";
 import MachineLearning from "./Components/BlogPages/Trending/MachineLearning";
 import Politics from "./Components/BlogPages/Trending/Politics";
 import See from "./Components/BlogPages/Trending/See";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Logout from "./Components/BlogPages/Personal/Logout";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Homepage />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-  },
-  {
-    path: "/confirmation",
-    element: <Confirmation />,
-  },
-  {
-    path: "/blog",
-    element: <Blog />,
-    children: [
-      {
-        path: "/blog/feed",
-        element: <Feed />,
-      },
-      {
-        path: "/blog/bookmark",
-        element: <Bookmark />,
-      },
-      {
-        path: "/blog/teamBlogs",
-        element: <TeamBlogs />,
-      },
-      {
-        path: "/blog/drafts",
-        element: <Drafts />,
-      },
-      {
-        path: "/blog/analytics",
-        element: <Analytics />,
-      },
-      {
-        path: "/blog/programming",
-        element: <Programming />,
-      },
-      {
-        path: "/blog/dataScience",
-        element: <DataScience />,
-      },
-      {
-        path: "/blog/technology",
-        element: <Technology />,
-      },
-      {
-        path: "/blog/machineLearning",
-        element: <MachineLearning />,
-      },
-      {
-        path: "/blog/politics",
-        element: <Politics />,
-      },
-      {
-        path: "/blog/all",
-        element: <See />,
-      },
-      {
-        path: "/blog/account",
-        element: <Account />,
-      },
-      {
-        path: "/blog/notification",
-        element: <Notification />,
-      },
-    ],
-  },
-]);
+const PostContext = createContext();
 
 function App() {
+  const [active, setActive] = useState("home");
+  const [user, setUser] = useState(null);
+  const [logOut, setLogOut] = useState(false);
+
+  useEffect(() => {
+    auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        setUser(authUser);
+      } else {
+        setUser(null);
+      }
+    });
+  }, []);
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      setUser(null);
+      setActive("login");
+    });
+  };
+
   return (
-    <>
-      <RouterProvider router={router} />
-    </>
+    <BrowserRouter>
+      <PostContext.Provider
+        value={{
+          handleLogout,
+          setActive,
+          setUser,
+          user,
+          active,
+          Logout,
+          setLogOut,
+        }}
+      >
+        <ToastContainer />
+        <Routes>
+          <Route path="/" element={<Homepage PostContext={PostContext} />} />
+          <Route
+            path="/login"
+            element={<LoginPage PostContext={PostContext} />}
+          />
+          <Route
+            path="/signup"
+            element={<Signup PostContext={PostContext} />}
+          />
+          <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="/blog" element={<Blog PostContext={PostContext} />}>
+            <Route path="/blog/feed" element={<Feed />} />
+            <Route path="/blog/bookmark" element={<Bookmark />} />
+            <Route path="/blog/teamBlogs" element={<TeamBlogs />} />
+            <Route path="/blog/drafts" element={<Drafts />} />
+            <Route path="/blog/analytics" element={<Analytics />} />
+            <Route path="/blog/programming" element={<Programming />} />
+            <Route path="/blog/dataScience" element={<DataScience />} />
+            <Route path="/blog/technology" element={<Technology />} />
+            <Route path="/blog/machineLearing" element={<MachineLearning />} />
+            <Route path="/blog/politics" element={<Politics />} />
+            <Route path="/blog/all" element={<See />} />
+            <Route path="/blog/account" element={<Account />} />
+            <Route path="/blog/notification" element={<Notification />} />
+            <Route
+              path="/blog/logout"
+              element={<Logout PostContext={PostContext} />}
+            />
+          </Route>
+        </Routes>
+      </PostContext.Provider>
+    </BrowserRouter>
   );
 }
 

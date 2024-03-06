@@ -5,17 +5,20 @@ import Footer from "../utilities/Footer";
 import Why from "../utilities/Why";
 import Owner from "../utilities/Owner";
 import Creators from "../utilities/Creators";
+import { useContext } from "react";
 
-function Homepage() {
+function Homepage({ PostContext }) {
+  const { user } = useContext(PostContext);
+  console.log(user)
   return (
     <div className="font-dmSans">
-      <Nav />
+      <Nav user={user}/>
       <Hero />
-      <About/>
-      <Why/>
-      <Owner/>
-      <Creators/>
-      <Footer/>
+      <About />
+      <Why />
+      <Owner />
+      <Creators />
+      <Footer />
     </div>
   );
 }

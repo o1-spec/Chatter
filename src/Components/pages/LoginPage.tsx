@@ -1,6 +1,6 @@
 import LoginForm from "../utilities/LoginForm";
 
-function LoginPage() {
+function LoginPage({ setActive, setUser }) {
   return (
     <div className="font-dmSans overflow-x-hidden">
       <div className="flex w-screen h-screen">
@@ -27,8 +27,10 @@ function LoginPage() {
               </div>
             </div>
             <div className=" flex flex-col">
-              <h4 className="text-3xl text-center pb-8 font-semibold">Welcome Back</h4>
-              <LoginForm/>
+              <h4 className="text-3xl text-center pb-8 font-semibold">
+                Welcome Back
+              </h4>
+              <LoginForm setActive={setActive} setUser={setUser} />
             </div>
           </div>
         </div>
