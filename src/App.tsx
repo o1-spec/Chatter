@@ -23,8 +23,11 @@ import Technology from "./Components/BlogPages/Trending/Technology";
 import MachineLearning from "./Components/BlogPages/Trending/MachineLearning";
 import Politics from "./Components/BlogPages/Trending/Politics";
 import See from "./Components/BlogPages/Trending/See";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Logout from "./Components/BlogPages/Personal/Logout";
+import PostBlog from "./Components/utilities/PostBlog";
+import BlogSection from "./Components/BlogPages/BlogSection";
+import UpdateBlog from "./Components/BlogPages/UpdateBlog";
 
 const PostContext = createContext();
 
@@ -78,17 +81,29 @@ function App() {
           <Route path="/blog" element={<Blog PostContext={PostContext} />}>
             <Route path="/blog/feed" element={<Feed />} />
             <Route path="/blog/bookmark" element={<Bookmark />} />
-            <Route path="/blog/teamBlogs" element={<TeamBlogs />} />
+            <Route
+              path="/blog/teamBlogs"
+              element={<TeamBlogs user={user} setActive={setActive} />}
+            />
             <Route path="/blog/drafts" element={<Drafts />} />
             <Route path="/blog/analytics" element={<Analytics />} />
             <Route path="/blog/programming" element={<Programming />} />
             <Route path="/blog/dataScience" element={<DataScience />} />
             <Route path="/blog/technology" element={<Technology />} />
-            <Route path="/blog/machineLearing" element={<MachineLearning />} />
+            <Route path="/blog/machineLearning" element={<MachineLearning />} />
             <Route path="/blog/politics" element={<Politics />} />
             <Route path="/blog/all" element={<See />} />
             <Route path="/blog/account" element={<Account />} />
             <Route path="/blog/notification" element={<Notification />} />
+            <Route path="/blog/blogSection/:id" element={<BlogSection />} />
+            <Route
+              path="/blog/updateBlog/:id"
+              element={<PostBlog user={user} setActive={setActive} />}
+            />
+            <Route
+              path="/blog/postBlog"
+              element={<PostBlog user={user} setActive={setActive} />}
+            />
             <Route
               path="/blog/logout"
               element={<Logout PostContext={PostContext} />}

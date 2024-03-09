@@ -1,16 +1,50 @@
-function FeedNav() {
+
+
+function FeedNav({ setForYou, setFeatured, setRecent }) {
+  const handleforYou = () => {
+    setForYou(true);
+    setFeatured(false);
+    setRecent(false);
+  };
+
+  const handleFeatured = () => {
+    setForYou(false);
+    setFeatured(true);
+    setRecent(false);
+  };
+
+  const handleRecent = () => {
+    setForYou(false);
+    setFeatured(false);
+    setRecent(true);
+  };
   return (
     <div className="border border-borderIcon px-6 pt-5 rounded-md">
       <ul className="flex justify-between items-center">
         <li className="relative flex flex-col">
-          <span className="text-xl font-semibold pb-3 cursor-pointer">For you</span>
+          <span
+            className="text-xl font-semibold pb-3 cursor-pointer"
+            onClick={handleforYou}
+          >
+            For you
+          </span>
           <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
         </li>
         <li className="relative flex flex-col">
-          <span className="text-xl font-semibold pb-3 cursor-pointer">Featured</span>
+          <span
+            className="text-xl font-semibold pb-3 cursor-pointer"
+            onClick={handleFeatured}
+          >
+            Featured
+          </span>
         </li>
         <li className="relative flex flex-col">
-          <span className="text-xl font-semibold pb-3 cursor-pointer">Recent</span>
+          <span
+            className="text-xl font-semibold pb-3 cursor-pointer"
+            onClick={handleRecent}
+          >
+            Recent
+          </span>
         </li>
       </ul>
     </div>

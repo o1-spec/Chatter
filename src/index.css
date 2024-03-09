@@ -28,3 +28,26 @@
   /* Firefox */
   -ms-overflow-style: none;
 }
+
+.textarea-class{
+  height: 1120px;
+  width: 80vw;
+  overflow-y: scroll;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading-animation {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  transform: translate(38rem, -30rem);
+}

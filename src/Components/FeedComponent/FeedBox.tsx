@@ -1,9 +1,11 @@
+import ForYou from "./ForYou";
 
-
-function FeedBox() {
+function FeedBox({ forYou, featured, recent }) {
   return (
-    <div className="border border-borderIcon px-6 pt-5 rounded-md"></div>
-  )
+    <div className="border border-borderIcon pt-5 rounded-md">
+      {forYou && <ForYou />}
+    </div>
+  );
 }
 
-export default FeedBox
+export default FeedBox;

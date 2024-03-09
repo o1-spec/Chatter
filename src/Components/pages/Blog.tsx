@@ -6,14 +6,16 @@ import { Outlet } from "react-router-dom";
 function Blog({ PostContext }) {
   const { handleLogout, setActive, user, active, setUser } =
     useContext(PostContext);
-  console.log(user);
+
   return (
-    <div className="font-dmSans">
-      <div className="flex">
+    <div className="font-dmSans w-full h-full">
+      <div className="flex h-full">
         <BlogNav handleLogout={handleLogout} />
-        <div className="basis-[83%] pl-[16%]">
+        <div className="w-[100vw] pl-[16%] overflow-scroll scroll">
           <BlogHead user={user} />
-          <Outlet />
+          <div className="h-screen overflow-scroll scroll">
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>

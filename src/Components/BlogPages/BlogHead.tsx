@@ -1,4 +1,4 @@
-function BlogHead({ user }) {
+function BlogHead({ user }) { 
   return (
     <div className=" flex items-center justify-between px-20 py-2 border border-r-0 border-l-0 border-borderIcon">
       <div className="flex items-center justify-center relative basis-[80%] ">
