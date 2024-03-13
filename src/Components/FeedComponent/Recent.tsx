@@ -1,7 +1,10 @@
+import Spinner from "../utilities/Spinner"
 
 function Recent() {
   return (
-    <div>Recent</div>
+    <div className="min-h-[40vh]">
+    <Spinner />;
+  </div>
   )
 }
 

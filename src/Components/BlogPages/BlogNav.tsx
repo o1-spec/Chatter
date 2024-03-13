@@ -15,7 +15,7 @@ function BlogNav({ handleLogout }) {
         <Overview
           blue={blue}
           setBlue={setBlue} 
-          activeLink={activeLink}
+          activeLink={activeLink} 
           setActiveLink={setActiveLink}
         />
         <Trending

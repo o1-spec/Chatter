@@ -13,12 +13,17 @@ const initialState = {
   confirmPassword: "",
 };
 
-function SignupForm({ setActive, setUser }) {
+function SignupForm({ setActive, setUser,  setLogin}) {
+  const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
   //const [signUp, setSignUp] = useState(false);
 
   const { email, password, firstName, lastName, confirmPassword } = state;
   const navigate = useNavigate();
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
 
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
@@ -65,6 +70,7 @@ function SignupForm({ setActive, setUser }) {
         });
       }
       navigate("/blog/feed");
+      setLogin(true)
     } catch (error) {
       const notify = () => {
         toast.error(`${error.message}`, {
@@ -135,7 +141,7 @@ function SignupForm({ setActive, setUser }) {
           <div className="relative">
             <input
               className="p-2 rounded-md w-[100%] placeholder:text-sm border border-borderIcon focus:outline-textBlue"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="********"
               name="password"
               value={password}
@@ -145,6 +151,7 @@ function SignupForm({ setActive, setUser }) {
               className="cursor-pointer absolute right-2 top-3"
               src="/Images/eye.svg"
               alt="eye-img"
+              onClick={togglePasswordVisibility}
             />
           </div>
         </div>
@@ -153,7 +160,7 @@ function SignupForm({ setActive, setUser }) {
           <div className="relative">
             <input
               className="p-2 rounded-md w-[100%] placeholder:text-sm border border-borderIcon focus:outline-textBlue"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="********"
               name="confirmPassword"
               value={confirmPassword}

@@ -8,12 +8,12 @@ import Creators from "../utilities/Creators";
 import { useContext } from "react";
 
 function Homepage({ PostContext }) {
-  const { user } = useContext(PostContext);
-  console.log(user)
+  const { user, setLogin } = useContext(PostContext);
+  console.log(user);
   return (
     <div className="font-dmSans">
-      <Nav user={user}/>
-      <Hero />
+      <Nav user={user} setLogin={setLogin} />
+      <Hero user={user} />
       <About />
       <Why />
       <Owner />

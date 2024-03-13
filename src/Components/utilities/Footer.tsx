@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <div className=" py-16 bg-bgCream">
+    <div data-aos="zoom-in" className=" py-16 bg-bgCream">
       <div className="lg:max-w-[1100px] my-0 mx-auto flex gap-8 justify-between px-4">
         <h5 className="lg:text-2xl text-textBlue uppercase font-bold">Chatter</h5>
         <div className="flex flex-col gap-2">

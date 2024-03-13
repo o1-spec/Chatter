@@ -148,7 +148,7 @@ function PostBlog({ user, setActive }) {
         try {
           await addDoc(collection(db, "blogs"), {
             ...form,
-            timestamp: serverTimestamp(),
+            createdAt: serverTimestamp(),
             author: user.displayName,
             userId: user.uid,
           });
@@ -272,7 +272,7 @@ function PostBlog({ user, setActive }) {
           </div>
           <div>
             <textarea
-              className="px-4 py-3 placeholder:text-lg text-xl focus:outline-none textarea-class placeholder:text-textGrey text-textBlack scroll"
+              className="px-4 py-3 placeholder:text-lg text-lg focus:outline-none textarea-class placeholder:text-textGrey text-textBlack scroll"
               placeholder="Write a Post ....."
               onChange={handleChange}
               value={description}

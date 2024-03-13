@@ -1,8 +1,20 @@
+import Aos from "aos";
+import { useEffect } from "react";
+import 'aos/dist/aos.css'
+
 function Why() {
+  useEffect(() => {
+    Aos.init({duration: 2000});
+  }, []);
   return (
-    <div className="lg:max-w-[1100px] my-0 mx-auto py-16 px-20">
+    <div
+      data-aos="fade-up"
+      className="lg:max-w-[1100px] my-0 mx-auto py-16 px-20"
+    >
       <div className="pb-10">
-        <h3 className="text-center text-3xl font-bold pb-3 text-textBlack">Why you should join chatter</h3>
+        <h3 className="text-center text-3xl font-bold pb-3 text-textBlack">
+          Why you should join chatter
+        </h3>
         <p className="text-[16px]">
           Our goal is to make writers and readers see our platform as their next
           heaven for blogging, ensuring ease in interactions, connecting with

@@ -1,6 +1,14 @@
+import Aos from "aos";
+import { useEffect } from "react";
+import 'aos/dist/aos.css'
+
+
 function About() {
+  useEffect(() => {
+    Aos.init({duration: 2000});
+  }, []);
   return (
-    <div className="py-20 lg:max-w-[1100px] my-0 mx-auto">
+    <div data-aos="fade-up" className="py-20 lg:max-w-[1100px] my-0 mx-auto">
       <div className="flex gap-20">
         <div className="basis-[55%]">
           <h5 className="text-3xl font-semibold pb-8">About&nbsp;Chatter</h5>

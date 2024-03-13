@@ -1,9 +1,11 @@
-
+import Spinner from "../utilities/Spinner";
 
 function FeedFeatured() {
   return (
-    <div>FeedFeatured</div>
-  )
+    <div className="min-h-[40vh]">
+      <Spinner />;
+    </div>
+  );
 }
 
-export default FeedFeatured
+export default FeedFeatured;

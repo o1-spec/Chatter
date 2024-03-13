@@ -1,6 +1,8 @@
 import SignupForm from "../utilities/SignupForm";
+import { useNavigate } from "react-router-dom";
 
 function Signup({ setActive, setUser }) {
+  const navigate = useNavigate()
   return (
     <div className="font-dmSans overflow-x-hidden">
       <div className="flex w-screen h-screen">
@@ -22,7 +24,7 @@ function Signup({ setActive, setUser }) {
                 <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
               </div>
               <div className="basis-1/2 relative">
-                <p className="text-center pb-2">Log In</p>
+              <p onClick={() => navigate("/login")} className="text-center pb-2 cursor-pointer">Log In</p>
                 <span className="absolute bottom-0 left-0 w-full h-[4px] bg-borderIcon"></span>
               </div>
             </div>

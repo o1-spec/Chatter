@@ -1,6 +1,11 @@
-
-
-function FeedNav({ setForYou, setFeatured, setRecent }) {
+function FeedNav({
+  setForYou,
+  setFeatured,
+  setRecent,
+  forYou,
+  featured,
+  recent,
+}) {
   const handleforYou = () => {
     setForYou(true);
     setFeatured(false);
@@ -28,7 +33,9 @@ function FeedNav({ setForYou, setFeatured, setRecent }) {
           >
             For you
           </span>
-          <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
+          {forYou && (
+            <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
+          )}
         </li>
         <li className="relative flex flex-col">
           <span
@@ -37,6 +44,9 @@ function FeedNav({ setForYou, setFeatured, setRecent }) {
           >
             Featured
           </span>
+          {featured && (
+            <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
+          )}
         </li>
         <li className="relative flex flex-col">
           <span
@@ -45,6 +55,9 @@ function FeedNav({ setForYou, setFeatured, setRecent }) {
           >
             Recent
           </span>
+          {recent && (
+            <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
+          )}
         </li>
       </ul>
     </div>

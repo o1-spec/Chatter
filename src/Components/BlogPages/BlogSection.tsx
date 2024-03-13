@@ -8,7 +8,7 @@ function BlogSection() {
   const [blogs, setBlogs] = useState([]);
   const [selectedBlog, setSelectedBlog] = useState(null);
 
-  useEffect(() => { 
+  useEffect(() => {
     const unsub = onSnapshot(
       collection(db, "blogs"),
       (snapshot) => {
@@ -43,21 +43,34 @@ function BlogSection() {
 
   return (
     <div className="py-8 px-3">
-      <div className="flex flex-col gap-4">
-        <img className="w-[600px] h-[330px]" src={selectedBlog?.imgUrl} alt={selectedBlog?.title} />
+      <div className="flex flex-col gap-10 mx-32">
+        <img
+          className="w-[750px] h-[430px]"
+          src={selectedBlog?.imgUrl || selectedBlog?.imageUrl}
+          alt={selectedBlog?.title}
+        />
         <div>
           <h5 className="text-4xl font-semibold pb-2">{selectedBlog?.title}</h5>
           <div className="flex items-center gap-2 pb-4">
             <p className="font-semibold text-xl">
-            Written By : &nbsp;{selectedBlog?.author}
+              Written By : &nbsp;{selectedBlog?.author}
             </p>
-            <span>
-            {selectedBlog?.timestamp.toDate().toDateString()}
-            </span>
+            {selectedBlog?.timestamp ? (
+              <span>{selectedBlog?.timestamp.toDate().toDateString()}</span>
+            ) : (
+              <span>{selectedBlog?.createdAt.toDate().toDateString()}</span>
+            )}
           </div>
-          <p className="text-[17px]">{selectedBlog?.description}</p>
+          <div className="text-[17px] pr-4">
+            {selectedBlog?.description &&
+              selectedBlog.description
+                .split("\n")
+                .map((paragraph, index) => <p key={index} className="pb-2">{paragraph}</p>)}
+          </div>
           <div className="flex justify-end">
-            <p className="text-textBlue font-semibold">{selectedBlog?.author}</p>
+            <p className="text-textBlue font-semibold">
+              {selectedBlog?.author}
+            </p>
           </div>
           <div className="pt-5">
             <span className="text-textGrey text-2xl">Comments :</span>

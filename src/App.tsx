@@ -2,6 +2,8 @@ import { ToastContainer } from "react-toastify";
 import { useState, useEffect, createContext } from "react";
 import { auth } from "./firebase";
 import { signOut } from "firebase/auth";
+import "aos/dist/aos.css";
+import Aos from "aos";
 
 //import { Suspense, lazy } from "react";
 
@@ -27,7 +29,6 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Logout from "./Components/BlogPages/Personal/Logout";
 import PostBlog from "./Components/utilities/PostBlog";
 import BlogSection from "./Components/BlogPages/BlogSection";
-import UpdateBlog from "./Components/BlogPages/UpdateBlog";
 
 const PostContext = createContext();
 
@@ -35,6 +36,7 @@ function App() {
   const [active, setActive] = useState("home");
   const [user, setUser] = useState(null);
   const [logOut, setLogOut] = useState(false);
+  const [logIn, setLogin] = useState(true);
 
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
@@ -53,6 +55,10 @@ function App() {
     });
   };
 
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+  }, []);
+
   return (
     <BrowserRouter>
       <PostContext.Provider
@@ -64,6 +70,8 @@ function App() {
           active,
           Logout,
           setLogOut,
+          logIn,
+          setLogin,
         }}
       >
         <ToastContainer />
@@ -71,11 +79,13 @@ function App() {
           <Route path="/" element={<Homepage PostContext={PostContext} />} />
           <Route
             path="/login"
-            element={<LoginPage PostContext={PostContext} />}
-          />
-          <Route
-            path="/signup"
-            element={<Signup PostContext={PostContext} />}
+            element={
+              <LoginPage
+                PostContext={PostContext}
+                setActive={setActive}
+                setUser={setUser}
+              />
+            }
           />
           <Route path="/confirmation" element={<Confirmation />} />
           <Route path="/blog" element={<Blog PostContext={PostContext} />}>
@@ -93,7 +103,10 @@ function App() {
             <Route path="/blog/machineLearning" element={<MachineLearning />} />
             <Route path="/blog/politics" element={<Politics />} />
             <Route path="/blog/all" element={<See />} />
-            <Route path="/blog/account" element={<Account />} />
+            <Route
+              path="/blog/account"
+              element={<Account PostContext={PostContext} />}
+            />
             <Route path="/blog/notification" element={<Notification />} />
             <Route path="/blog/blogSection/:id" element={<BlogSection />} />
             <Route

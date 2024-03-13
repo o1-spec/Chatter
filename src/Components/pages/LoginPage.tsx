@@ -1,6 +1,10 @@
 import LoginForm from "../utilities/LoginForm";
+import { useContext } from "react";
+import SignupForm from "../utilities/SignupForm";
 
-function LoginPage({ setActive, setUser }) {
+function LoginPage({ setActive, setUser, PostContext }) {
+  const { logIn, setLogin } = useContext(PostContext);
+
   return (
     <div className="font-dmSans overflow-x-hidden">
       <div className="flex w-screen h-screen">
@@ -18,20 +22,57 @@ function LoginPage({ setActive, setUser }) {
           <div className="w-[450px] my-0 mx-auto">
             <div className="flex justify-between pb-12">
               <div className="basis-1/2 relative">
-                <p className="text-center pb-2">Register</p>
-                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-borderIcon"></span>
+                <p
+                  onClick={() => setLogin(false)}
+                  className="text-center pb-2 cursor-pointer"
+                >
+                  Register
+                </p>
+                {!logIn ? (
+                  <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
+                ) :(
+                  <span className="absolute bottom-0 left-0 w-full h-[4px] bg-borderIcon"></span>
+                )}
               </div>
               <div className="basis-1/2 relative">
-                <p className="text-center pb-2">Log In</p>
-                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
+                <p
+                  onClick={() => setLogin(true)}
+                  className="text-center pb-2 cursor-pointer"
+                >
+                  Log In
+                </p>
+                {logIn ? (
+                  <span className="absolute bottom-0 left-0 w-full h-[4px] bg-textBlue"></span>
+                ) : (
+                  <span className="absolute bottom-0 left-0 w-full h-[4px] bg-borderIcon"></span>
+                )}
               </div>
             </div>
-            <div className=" flex flex-col">
-              <h4 className="text-3xl text-center pb-8 font-semibold">
-                Welcome Back
-              </h4>
-              <LoginForm setActive={setActive} setUser={setUser} />
-            </div>
+            {logIn ? (
+              <div className=" flex flex-col">
+                <h4 className="text-3xl text-center pb-8 font-semibold">
+                  Welcome Back
+                </h4>
+                <LoginForm
+                  logIn={logIn}
+                  setLogin={setLogin}
+                  setActive={setActive}
+                  setUser={setUser}
+                />
+              </div>
+            ) : (
+              <div className=" flex flex-col">
+                <h4 className="text-3xl text-center pb-8 font-semibold">
+                  Register as a Writer/Reader
+                </h4>
+                <SignupForm
+                  login={logIn}
+                  setLogin={setLogin}
+                  setActive={setActive}
+                  setUser={setUser}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

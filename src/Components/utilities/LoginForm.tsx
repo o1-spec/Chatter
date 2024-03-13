@@ -9,13 +9,18 @@ const initialState = {
   password: "",
 };
 
-function LoginForm({setActive,setUser}) {
+function LoginForm({setActive,setUser, setLogin}) {
+  const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
   const { email, password } = state;
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   const handleAuth = async (e) => {
@@ -30,6 +35,7 @@ function LoginForm({setActive,setUser}) {
         );
         navigate("/blog/feed");
         setUser(user)
+        setLogin(true)
       } else {
         return toast.error("All fields are mandatory", {
           position: "bottom-left",
@@ -84,7 +90,7 @@ function LoginForm({setActive,setUser}) {
           <div className="relative">
             <input
               className="p-2 rounded-md w-[100%] placeholder:text-sm border border-borderIcon focus:outline-textBlue"
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="********"
               name="password"
               value={password}
@@ -94,6 +100,7 @@ function LoginForm({setActive,setUser}) {
               className="cursor-pointer absolute right-2 top-3"
               src="/Images/eye.svg"
               alt="eye-img"
+              onClick={togglePasswordVisibility}
             />
           </div>
         </div>

@@ -11,12 +11,12 @@ function Blog({ PostContext }) {
     <div className="font-dmSans w-full h-full">
       <div className="flex h-full">
         <BlogNav handleLogout={handleLogout} />
-        <div className="w-[100vw] pl-[16%] overflow-scroll scroll">
+        <div className="w-[100vw] pl-[16%] overflow-hidden">
           <BlogHead user={user} />
-          <div className="h-screen overflow-scroll scroll">
+          <div className=" h-screen overflow-scroll scroll">
             <Outlet />
           </div>
-        </div>
+        </div> 
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ function TeamBlogs({ user, setActive }) {
       try {
         setLoading(true);
         await deleteDoc(doc(db, "blogs", id));
-        toast.success("Blog deleted successfully",  {
+        toast.success("Blog deleted successfully", {
           position: "bottom-left",
           autoClose: 5000,
           hideProgressBar: false,
@@ -59,21 +59,36 @@ function TeamBlogs({ user, setActive }) {
   };
 
   if (loading) {
-    return <Spinner />;
+    return (
+      <div className="mt-40">
+        <Spinner />
+      </div>
+    );
   }
 
-  console.log("blogs", blogs);
+  let teamBlogs = [];
+  blogs.map((blog) => {
+    if (blog.id === user.uid || blog.userId === user.uid) {
+      teamBlogs.push(blog);
+    } else {
+      return;
+    }
+  });
 
+  //console.log(teamBlogs)
+
+  //console.log("blogs", blogs);
+  //console.log(user.uid)
   return (
     <div className="m-7 border border-borderIcon rounded-md h-fit">
       <div className="px-8 py-6 h-full">
         <h3 className="text-4xl text-textBlack font-semibold">Your Stories</h3>
         <div className="flex flex-col gap-8 pt-8">
-          {blogs.map((blog, id) => (
+          {teamBlogs.map((blog, id) => (
             <div key={id} className="flex items-start gap-4 w-full">
               <img
                 className="w-80 h-52 rounded-md"
-                src={blog?.imgUrl}
+                src={blog?.imageUrl || blog.imgUrl}
                 alt={blog?.title}
               />
               <div className="flex flex-col gap-1 pt-1">
@@ -82,9 +97,7 @@ function TeamBlogs({ user, setActive }) {
                 </span>
                 <div className="flex gap-2 items-center">
                   <p className="font-semibold text-[18px]">{blog?.author}</p>
-                  <p className="text-[15px]">
-                    {blog?.timestamp.toDate().toDateString()}
-                  </p>
+                  <p className="text-[15px]"></p>
                 </div>
                 <Link
                   to={`/blog/blogSection/${blog.id}`}
