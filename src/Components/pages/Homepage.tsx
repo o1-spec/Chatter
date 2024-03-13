@@ -20,7 +20,7 @@ function Homepage({ PostContext }) {
       <Creators />
       <Footer />
     </div>
-  );
+  ); 
 }
 
 export default Homepage;

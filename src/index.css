@@ -17,6 +17,7 @@
   background-position: 30% 40%;
   background-repeat: no-repeat;
   filter: brightness(50%);
+  object-fit: cover;
 }
 
 .scroll::-webkit-scrollbar {

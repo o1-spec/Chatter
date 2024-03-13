@@ -37,34 +37,44 @@ const textVariants = {
 
 function Hero({ user }) {
   return (
-    <div className="relative w-full h-full flex items-center justify-center py-28">
+    <div className="relative w-full h-full flex items-center lg:items-start justify-center md:py-28 py-32 lg:justify-start">
       <motion.div
         variants={textVariants.bgImage}
         initial="initial"
         animate="animate"
-        className="hero-bg absolute top-0 left-0 right-0 bottom-0 w-full h-full -z-10"
+        className={
+          user
+            ? "hero-bg absolute top-12 left-0 right-0 bottom-0 w-full h-[110%] -z-10"
+            : "hero-bg absolute top-12 left-0 right-0 bottom-0 w-full h-full -z-10"
+        }
       ></motion.div>
       <motion.div
         variants={textVariants}
         initial="initial"
         animate="animate"
-        className="flex flex-col gap-8"
+        className="flex flex-col gap-8 px-3 lg:px-20 items-start"
       >
         <motion.h5
           variants={textVariants}
-          className="text-4xl text-textWhite font-bold leading-[47px]"
+          className="text-[30px] md:text-4xl sm:text-[33px] text-textWhite text-center font-bold md:leading-[47px] leading-[38px] lg:text-start"
         >
           Welcome to Chatter: A Haven for Text-{" "}
           <span className="block"> Based Content</span>
         </motion.h5>
-        <motion.p variants={textVariants} className="text-xl text-textWhite">
+        <motion.p
+          variants={textVariants}
+          className="text-xl text-textWhite text-center lg:text-[16px]"
+        >
           Unleash the Power of Words, Connect with Like-minded Readers and
           Writers
         </motion.p>
         {!user ? (
-          <motion.div variants={textVariants}>
+          <motion.div
+            variants={textVariants}
+            className="flex w-full items-center justify-center lg:items-start lg:justify-start"
+          >
             <Link
-              className="w-32 text-textWhite text-[14px]  bg-textBlue px-6 py-2 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
+              className="w-32 text-textWhite text-[14px]  bg-textBlue px-6 py-2 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300 sm:px-8 sm:w-44 lg:w-[124px] lg:px-4 lg:text-[15px] sm:text-lg"
               to="/login"
             >
               Get Started

@@ -17,7 +17,7 @@ function Personal() {
               <span>Account</span>
             </Link>
           </li>
-          <li>
+          <li> 
             <Link
               to="/blog/notification"
               className="flex items-center w-fit gap-3 text-[15px]"
