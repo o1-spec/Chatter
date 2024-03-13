@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithPopup,
   GoogleAuthProvider,
+  FacebookAuthProvider,
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
@@ -22,6 +23,7 @@ function SignupForm({ setActive, setUser, setLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
   const googleProvider = new GoogleAuthProvider();
+  const facebookProvider = new FacebookAuthProvider();
   //const [signUp, setSignUp] = useState(false);
 
   const { email, password, firstName, lastName, confirmPassword } = state;
@@ -41,8 +43,69 @@ function SignupForm({ setActive, setUser, setLogin }) {
       const user = result.user;
       setUser(user);
       navigate("/blog/feed");
+      toast.success("Sign Up with Google Complete", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
     } catch (error) {
-      console.error("Error signing in with Google:", error);
+      toast.error("Error signing Up with Google:", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    }
+  };
+
+  const handleFacebookSignUp = async () => {
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result.user;
+      setUser(user);
+      navigate("/blog/feed");
+      toast.success("Sign Up with Facebook Complete", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    } catch (error) {
+      toast.error("Error signing in with Facebook:", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
     }
   };
 
@@ -203,13 +266,13 @@ function SignupForm({ setActive, setUser, setLogin }) {
           <img src="/Images/Google.svg" alt="Google Icon" />
           <span>Sign up with Google</span>
         </button>
-        <Link
+        <button
           className=" text-textBlack text-[15px] border border-bgIcon px-6 py-3 rounded-lg text-center flex items-center gap-2 justify-center"
-          to=""
+          onClick={handleFacebookSignUp}
         >
-          <img src="/Images/LinkedIn.svg" alt="LinkedIn Icon" />
-          <span>Sign up with LinkedIn</span>
-        </Link>
+          <i className="fa-brands fa-facebook text-xl text-textBlue"></i>
+          <span>Sign up with Facebook</span>
+        </button>
       </form>
     </>
   );
