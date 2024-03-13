@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
 
@@ -13,9 +18,10 @@ const initialState = {
   confirmPassword: "",
 };
 
-function SignupForm({ setActive, setUser,  setLogin}) {
+function SignupForm({ setActive, setUser, setLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
+  const googleProvider = new GoogleAuthProvider();
   //const [signUp, setSignUp] = useState(false);
 
   const { email, password, firstName, lastName, confirmPassword } = state;
@@ -27,6 +33,17 @@ function SignupForm({ setActive, setUser,  setLogin}) {
 
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      setUser(user);
+      navigate("/blog/feed");
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    }
   };
 
   const handleAuth = async (e) => {
@@ -70,7 +87,7 @@ function SignupForm({ setActive, setUser,  setLogin}) {
         });
       }
       navigate("/blog/feed");
-      setLogin(true)
+      setLogin(true);
     } catch (error) {
       const notify = () => {
         toast.error(`${error.message}`, {
@@ -179,13 +196,13 @@ function SignupForm({ setActive, setUser,  setLogin}) {
         >
           Create Account
         </button>
-        <Link
+        <button
           className=" text-textBlack text-[15px] border border-bgIcon px-6 py-3 rounded-lg text-center flex items-center justify-center gap-2"
-          to="/"
+          onClick={handleGoogleSignUp}
         >
           <img src="/Images/Google.svg" alt="Google Icon" />
           <span>Sign up with Google</span>
-        </Link>
+        </button>
         <Link
           className=" text-textBlack text-[15px] border border-bgIcon px-6 py-3 rounded-lg text-center flex items-center gap-2 justify-center"
           to=""

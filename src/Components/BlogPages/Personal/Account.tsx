@@ -1,33 +1,48 @@
 import { useContext, useState } from "react";
 import { auth } from "../../../firebase";
-import { updateProfile } from "firebase/auth";
+import { updateEmail, updateProfile } from "firebase/auth";
 
 function Account({ PostContext }) {
   const { user } = useContext(PostContext);
   const currentUser = auth.currentUser;
   const [update, setUpdate] = useState(true);
-  console.log(currentUser);
+  const [newEmail, setNewEmail] = useState("");
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [newPhotoURL, setNewPhotoURL] = useState("");
 
   const handlePicture = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
-
-    updateProfile(currentUser, {
-      photoURL: imageUrl,
-    })
-      .then(() => {
-        console.log("Image uploaded successfully");
-      })
-      .catch((error) => {
-        console.error("Error uploading image:", error);
-      });
+    setNewPhotoURL(imageUrl);
   };
 
   const handleUpdateChange = () => {
+    if (newEmail !== "") {
+      updateEmail(currentUser, newEmail)
+        .then(() => {
+          console.log("Email updated successfully");
+        })
+        .catch((error) => {
+          console.error("Error updating email:", error);
+        });
+    }
+
+    if (newDisplayName !== "" || newPhotoURL !== "") {
+      const updatedProfile = {};
+      if (newDisplayName !== "") updatedProfile.displayName = newDisplayName;
+      if (newPhotoURL !== "") updatedProfile.photoURL = newPhotoURL;
+
+      updateProfile(currentUser, updatedProfile)
+        .then(() => {
+          console.log("Profile updated successfully");
+        })
+        .catch((error) => {
+          console.error("Error updating profile:", error);
+        });
+    }
+
     setUpdate(false);
   };
-
-  //console.log(user);
 
   return (
     <div className="pt-8 px-16">
@@ -44,7 +59,8 @@ function Account({ PostContext }) {
               ) : (
                 <input
                   type="text"
-                  value={user?.displayName.split(" ")[0]}
+                  value={newDisplayName}
+                  onChange={(e) => setNewDisplayName(e.target.value)}
                   name="firstName"
                   className="border-[1.35px] border-textBlue focus:outline-none w-[75%] px-1 py-1 rounded-md"
                 />
@@ -57,7 +73,8 @@ function Account({ PostContext }) {
               ) : (
                 <input
                   type="text"
-                  value={user?.displayName.split(" ")[1]}
+                  value={newDisplayName}
+                  onChange={(e) => setNewDisplayName(e.target.value)}
                   name="lastName"
                   className="border-[1.35px] border-textBlue focus:outline-none w-[75%] px-1 py-1 rounded-md"
                 />
@@ -70,31 +87,25 @@ function Account({ PostContext }) {
               ) : (
                 <input
                   type="text"
-                  value={user?.email}
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
                   name="email"
-                  onChange={handleUpdateChange}
                   className=" border-[1.35px] border-textBlue focus:outline-none w-[75%] px-1 py-1 rounded-md"
                 />
               )}
             </div>
             <div className="flex flex-col gap-2">
               <span className="font-semibold text-[19px]">Phone Number</span>
-              {update ? (
-                <p className="text-[16px]">{user?.phoneNumber}</p>
-              ) : (
-                <input
-                  type="text"
-                  value={user?.phoneNumber}
-                  name="phoneNumber"
-                  onChange={handleUpdateChange}
-                  className="border-[1.35px] border-textBlue focus:outline-none w-[75%] px-1 py-1 rounded-md"
-                />
-              )}
+              <p className="text-[16px]">{user?.phoneNumber}</p>
             </div>
           </div>
           <div className="w-[220px] flex flex-col items-center -translate-y-16">
             <img
-              src={user?.photoURL === null ? "/Images/user.png" : user?.photoURL}
+              src={
+                user?.photoURL === null
+                  ? "/Images/user.png"
+                  : newPhotoURL || user?.photoURL
+              }
               alt="Profile picture"
               className="rounded-full w-[600px] h-[220px] object-cover"
             />
@@ -107,11 +118,11 @@ function Account({ PostContext }) {
                 <input
                   type="file"
                   id="profile"
-                  onChange={(e) => handlePicture(e)}
+                  onChange={handlePicture}
                   style={{ display: "none" }}
                 />
               </label>
-              <span className="text-sm text-textBlue inline-block pt-4">
+              <span className="text-md text-textBlue inline-block pt-4">
                 Change your Profile picture
               </span>
               <button
