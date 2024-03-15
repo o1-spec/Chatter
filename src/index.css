@@ -20,6 +20,10 @@
   object-fit: cover;
 }
 
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .scroll::-webkit-scrollbar {
   width: 0.01px;
   /* Width of the scrollbar */
@@ -30,7 +34,7 @@
   -ms-overflow-style: none;
 }
 
-.textarea-class{
+.textarea-class {
   height: 1120px;
   width: 80vw;
   overflow-y: scroll;

@@ -1,3 +1,12 @@
+interface feedNav {
+  setForYou: (value: boolean) => void;
+  setFeatured: (value: boolean) => void;
+  setRecent: (value: boolean) => void;
+  forYou: boolean;
+  recent: boolean;
+  featured: boolean;
+}
+
 function FeedNav({
   setForYou,
   setFeatured,
@@ -5,7 +14,7 @@ function FeedNav({
   forYou,
   featured,
   recent,
-}) {
+}: feedNav) {
   const handleforYou = () => {
     setForYou(true);
     setFeatured(false);
@@ -28,7 +37,7 @@ function FeedNav({
       <ul className="flex justify-between items-center">
         <li className="relative flex flex-col">
           <span
-            className="text-xl font-semibold pb-3 cursor-pointer"
+            className="sm:text-xl text-lg font-semibold pb-3 cursor-pointer"
             onClick={handleforYou}
           >
             For you
@@ -39,7 +48,7 @@ function FeedNav({
         </li>
         <li className="relative flex flex-col">
           <span
-            className="text-xl font-semibold pb-3 cursor-pointer"
+            className="sm:text-xl text-lg font-semibold pb-3 cursor-pointer"
             onClick={handleFeatured}
           >
             Featured
@@ -50,7 +59,7 @@ function FeedNav({
         </li>
         <li className="relative flex flex-col">
           <span
-            className="text-xl font-semibold pb-3 cursor-pointer"
+            className="sm:text-xl text-lg font-semibold pb-3 cursor-pointer"
             onClick={handleRecent}
           >
             Recent

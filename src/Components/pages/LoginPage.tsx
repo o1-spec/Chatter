@@ -1,9 +1,14 @@
 import LoginForm from "../utilities/LoginForm";
 import { useContext } from "react";
 import SignupForm from "../utilities/SignupForm";
+import { PostContextValue } from "../../App";
 
-function LoginPage({ setActive, setUser, PostContext }) {
-  const { logIn, setLogin } = useContext(PostContext);
+interface LoginPage {
+  PostContext: React.Context<PostContextValue>;
+}
+
+function LoginPage({ PostContext }: LoginPage) {
+  const { logIn, setLogin, setUser, setActive } = useContext(PostContext);
 
   return (
     <div className="font-dmSans overflow-x-hidden">
@@ -53,12 +58,7 @@ function LoginPage({ setActive, setUser, PostContext }) {
                 <h4 className="text-3xl text-center pb-8 font-semibold">
                   Welcome Back
                 </h4>
-                <LoginForm
-                  logIn={logIn}
-                  setLogin={setLogin}
-                  setActive={setActive}
-                  setUser={setUser}
-                />
+                <LoginForm setLogin={setLogin} setUser={setUser} />
               </div>
             ) : (
               <div className=" flex flex-col">
@@ -66,7 +66,6 @@ function LoginPage({ setActive, setUser, PostContext }) {
                   Register as a Writer/Reader
                 </h4>
                 <SignupForm
-                  login={logIn}
                   setLogin={setLogin}
                   setActive={setActive}
                   setUser={setUser}

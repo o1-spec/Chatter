@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { Link } from "react-router-dom";
 import { Excerpts } from "../../utilities/Excerpts";
 import Spinner from "../../utilities/Spinner";
+import { TrendingInterface } from "./TrendingInterface";
 
 function Technology() {
   const [loading, setLoading] = useState(true);
-  const [totalBlogs, setTotalBlogs] = useState([]);
+  const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -16,9 +17,9 @@ function Technology() {
         const unsub = onSnapshot(
           collection(db, "blogs"),
           (snapshot) => {
-            const list: object[] = [];
+            const list: TrendingInterface[] = [];
             snapshot.docs.forEach((doc) => {
-              list.push({ id: doc.id, ...doc.data() });
+              list.push({ id: doc.id, ...doc.data() } as TrendingInterface);
             });
             setTotalBlogs(list);
             setLoading(false);
@@ -32,7 +33,10 @@ function Technology() {
           unsub();
         };
       } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+          // e is narrowed to Error!
+          console.log(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -42,18 +46,25 @@ function Technology() {
 
   //console.log(totalBlogs);
 
-  const formatTimestamp = (seconds) => {
+  const convertSecondsToDate = (seconds: number) => {
+    // Convert seconds to milliseconds
     const milliseconds = seconds * 1000;
+
     const date = new Date(milliseconds);
 
-    const month = date.toLocaleString("default", { month: "long" });
-    const year = date.getFullYear();
-    const day = date.getDate();
-    const formattedDate = `${month} ${day}, ${year}`;
+    const formattedDate = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+
     return formattedDate;
   };
 
-  const techBlog: never[] = [];
+  const techBlog: TrendingInterface[] = [];
   totalBlogs.map((blog) => {
     if (blog.category === "Technology") {
       techBlog.push(blog);
@@ -72,12 +83,12 @@ function Technology() {
 
   //console.log(techBlog);
   return (
-    <div className="m-7 border border-borderIcon h-fit">
-      <div className="max-w-[80%] mx-auto my-0 py-8">
+    <div className="md:m-7 m-3 md:border border-borderIcon h-fit">
+      <div className="md:max-w-[80%] mx-auto my-0 py-8 px-3 md:px-0">
         <div className="flex justify-between items-center pb-6">
           <div className="flex flex-col gap-4">
             <h2 className="text-3xl font-semibold">Technology</h2>
-            <span className="text-[17px]">
+            <span className="text-[16px] pb-4 sm:pb-0">
               Explore different content relating to technology you’d love
             </span>
           </div>
@@ -86,34 +97,36 @@ function Technology() {
           <div className="py-5 pt-1">
             {techBlog.map((blog) => (
               <div
-                className="border-b border-b-borderIcon pb-5 pt-5 px-6"
+                className="border-b border-b-borderIcon pb-5 pt-5 sm:px-6 px-4"
                 key={blog.uid}
               >
-                <div className="w-[600px]">
+                <div className="md:w-[450px] lg:w-[600px] w-fit my-0 mx-auto">
                   <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 sm:justify-normal">
                       <img
-                        className="w-20 h-[82px] rounded-full"
+                        className="w-20 h-[82px] rounded-full object-cover"
                         src={blog.icon}
                         alt={blog.title}
                       />
                       <div>
-                        <p className="font-semibold text-xl">{blog.author}</p>
-                        <p className="flex items-center gap-2">
+                        <p className="font-semibold sm:text-xl text-lg">
+                          {blog.author}
+                        </p>
+                        <p className="flex flex-col gap-1 sm:gap-2">
                           <span className="text-[16px]">{blog.category}</span>
                           <span className="text-sm">
-                            {formatTimestamp(blog.createdAt.seconds * 1000)}
+                            {convertSecondsToDate(blog.createdAt)}
                           </span>
                         </p>
                       </div>
                     </div>
                     <Link
                       to={`/blog/blogSection/${blog.id}`}
-                      className="text-2xl font-semibold underline"
+                      className="sm:text-2xl text-xl font-semibold underline"
                     >
                       {blog.title}
                     </Link>
-                    <p className="text-[16px]">
+                    <p className="text-[15px] md:text-[16px] sm:pr-6 pr-3">
                       {Excerpts(blog?.description, 250)}
                     </p>
                     <img

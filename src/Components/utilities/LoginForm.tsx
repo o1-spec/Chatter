@@ -2,20 +2,24 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
+import { User } from "firebase/auth";
 import { toast } from "react-toastify";
-
 const initialState = {
   email: "",
   password: "",
 };
 
-function LoginForm({setActive,setUser, setLogin}) {
+interface LoginFormProps {
+  setUser: (user: User) => void;
+  setLogin: (value: boolean) => void;
+}
+function LoginForm({ setUser, setLogin }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
   const { email, password } = state;
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
@@ -23,7 +27,7 @@ function LoginForm({setActive,setUser, setLogin}) {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleAuth = async (e) => {
+  const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
 
@@ -34,8 +38,8 @@ function LoginForm({setActive,setUser, setLogin}) {
           password
         );
         navigate("/blog/feed");
-        setUser(user)
-        setLogin(true)
+        setUser(user);
+        setLogin(true);
       } else {
         return toast.error("All fields are mandatory", {
           position: "bottom-left",
@@ -51,23 +55,25 @@ function LoginForm({setActive,setUser, setLogin}) {
           },
         });
       }
-    } catch (error) {
-      const notify = () => {
-        toast.error(`${error.message}`, {
-          position: "bottom-left",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          style: {
-            fontSize: "1rem",
-          },
-        });
-      };
-      notify();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        const notify = () => {
+          toast.error(`${err}`, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            style: {
+              fontSize: "1rem",
+            },
+          });
+        };
+        notify();
+      }
     }
   };
 

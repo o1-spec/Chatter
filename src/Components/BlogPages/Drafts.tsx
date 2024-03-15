@@ -2,8 +2,12 @@
 
 function Drafts() {
   return (
-    <div>Drafts</div>
+    <div>
+      <div>
+        
+      </div>
+    </div>
   )
 }
 
-export default Drafts 
+export default Drafts  

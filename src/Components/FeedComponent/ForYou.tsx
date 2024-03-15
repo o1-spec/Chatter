@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
-import { collection, doc, onSnapshot } from "firebase/firestore";
-import { getDownloadURL, listAll, ref } from "firebase/storage";
-import { storage } from "../../firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+//import { getDownloadURL, listAll, ref } from "firebase/storage";
+//import { storage } from "../../firebase";
 import { db } from "../../firebase";
 import { Excerpts } from "../utilities/Excerpts";
 import { Link } from "react-router-dom";
 import Spinner from "../utilities/Spinner";
 import { toast } from "react-toastify";
+import { TrendingInterface } from "../BlogPages/Trending/TrendingInterface";
 
 function ForYou() {
   const [loading, setLoading] = useState(true);
-  const [totalBlogs, setTotalBlogs] = useState([]);
-  const [imageUrl, setImageUrl] = useState([]);
+  const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
+  //const [imageUrl, setImageUrl] = useState([]);
   const [bookmark, setBookmark] = useState(false);
-  const [bookmarkedBlogs, setBookmarkedBlogs] = useState([]);
+  const [bookmarkedBlogs, setBookmarkedBlogs] = useState<TrendingInterface[]>(
+    []
+  );
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -22,9 +25,9 @@ function ForYou() {
         const unsub = onSnapshot(
           collection(db, "blogs"),
           (snapshot) => {
-            const list: object[] = [];
+            const list: TrendingInterface[] = [];
             snapshot.docs.forEach((doc) => {
-              list.push({ id: doc.id, ...doc.data() });
+              list.push({ id: doc.id, ...doc.data() } as TrendingInterface);
             });
             setTotalBlogs(list);
           },
@@ -39,7 +42,10 @@ function ForYou() {
         //const querySnapshot = await getDocs(collection(db, "blogs"));
         //const documentsData = querySnapshot.docs.map((doc) => doc.data());
       } catch (err) {
-        console.log(err.message);
+        if (err instanceof Error) {
+          // e is narrowed to Error!
+          console.log(err.message);
+        }
       } finally {
         setLoading(false);
       }
@@ -47,6 +53,7 @@ function ForYou() {
     fetchBlog();
   }, []);
 
+  /*
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -68,16 +75,23 @@ function ForYou() {
 
     fetchImages();
   }, []);
-
+*/
   useEffect(() => {
-    const storedBookmarks = JSON.parse(localStorage.getItem("bookmarkedBlogs"));
-    if (storedBookmarks) {
-      setBookmarkedBlogs(storedBookmarks);
+    const storedBookmarkString = localStorage.getItem("bookmarkedBlogs");
+    if (storedBookmarkString) {
+      const storedBookmark: TrendingInterface[] =
+        JSON.parse(storedBookmarkString);
+      setBookmarkedBlogs(storedBookmark);
     }
   }, []);
 
-  console.log(bookmarkedBlogs);
+  if (bookmark) {
+    console.log("yes");
+  }
 
+  //console.log(bookmarkedBlogs);
+  console.log(totalBlogs);
+  /*
   const getImagePaths = async () => {
     try {
       const imagesRef = ref(storage, "/Icon-img"); // Change this to your directory path
@@ -88,9 +102,9 @@ function ForYou() {
       console.error("Error fetching image paths:", error);
       return [];
     }
-  };
+  };*/
 
-  const convertSecondsToDate = (seconds) => {
+  const convertSecondsToDate = (seconds: number) => {
     // Convert seconds to milliseconds
     const milliseconds = seconds * 1000;
 
@@ -108,10 +122,10 @@ function ForYou() {
     return formattedDate;
   };
 
-  const handleBookmark = (blogId) => {
+  const handleBookmark = (blogId: string) => {
     const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
 
-    let updatedBookmarks = [];
+    let updatedBookmarks: TrendingInterface[] = [];
 
     if (isBookmarked) {
       updatedBookmarks = bookmarkedBlogs.filter((blog) => blog.id !== blogId);
@@ -161,21 +175,25 @@ function ForYou() {
         <>
           {totalBlogs.map((blog, index) => (
             <div
-              className="border-b border-b-borderIcon pb-2 pt-10 px-6"
+              className="border-b border-b-borderIcon pb-2 pt-8 md:pt-10 sm:px-6 px-4"
               key={index}
             >
-              <div className="w-[650px] my-0 mx-auto">
+              <div className="w-fit md:w-[650px] my-0 mx-auto">
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between sm:justify-normal gap-3">
                     <img
-                      className="w-20 h-[82px] rounded-full"
+                      className="w-20 h-[82px] rounded-full object-cover"
                       src={blog.icon}
                       alt={blog.title}
                     />
                     <div>
-                      <p className="font-semibold text-xl">{blog.author}</p>
-                      <p className="flex flex-col gap-2">
-                        <span className="text-[16px]">{blog.category}</span>
+                      <p className="font-semibold sm:text-xl text-lg">
+                        {blog.author}
+                      </p>
+                      <p className="flex flex-col gap-1 sm:gap-2">
+                        <span className="text-[15px] sm:text-[16px]">
+                          {blog.category}
+                        </span>
                         <span className="text-sm">
                           {convertSecondsToDate(blog.createdAt)}
                         </span>
@@ -184,11 +202,11 @@ function ForYou() {
                   </div>
                   <Link
                     to={`/blog/blogSection/${blog.id}`}
-                    className="text-2xl font-semibold underline"
+                    className="sm:text-2xl text-xl font-semibold underline"
                   >
                     {blog.title}
                   </Link>
-                  <p className="text-[16px] pr-6">
+                  <p className="text-[15px] md:text-[16px] pr-6">
                     {Excerpts(blog?.description, 250)}
                   </p>
                   <img className="w-fit" src={blog.imageUrl} alt={blog.title} />

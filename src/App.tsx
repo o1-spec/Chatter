@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ToastContainer } from "react-toastify";
 import { useState, useEffect, createContext } from "react";
 import { auth } from "./firebase";
@@ -9,7 +10,6 @@ import Aos from "aos";
 
 import Homepage from "./Components/pages/Homepage";
 import LoginPage from "./Components/pages/LoginPage";
-import Signup from "./Components/pages/Signup";
 import Confirmation from "./Components/pages/Confirmation";
 import Blog from "./Components/pages/Blog";
 import Feed from "./Components/BlogPages/Feed";
@@ -25,18 +25,35 @@ import Technology from "./Components/BlogPages/Trending/Technology";
 import MachineLearning from "./Components/BlogPages/Trending/MachineLearning";
 import Politics from "./Components/BlogPages/Trending/Politics";
 import See from "./Components/BlogPages/Trending/See";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Logout from "./Components/BlogPages/Personal/Logout";
 import PostBlog from "./Components/utilities/PostBlog";
 import BlogSection from "./Components/BlogPages/BlogSection";
+import React from "react";
+import { User } from "firebase/auth";
 
-const PostContext = createContext();
+export interface PostContextValue {
+  handleLogout: () => void;
+  setActive: (active: string) => void;
+  setUser: (user: User) => void;
+  user: User | null;
+  active: string;
+  logout: boolean;
+  overlay: boolean;
+  setOverlay: (overlay: boolean) => void;
+  setLogOut: (logOut: boolean) => void;
+  logIn: boolean;
+  setLogin: (logIn: boolean) => void;
+}
+
+const PostContext = createContext<PostContextValue>(null);
 
 function App() {
-  const [active, setActive] = useState("home");
-  const [user, setUser] = useState(null);
-  const [logOut, setLogOut] = useState(false);
+  const [active, setActive] = React.useState<string>("home");
+  const [user, setUser] = useState<User | null>(null);
+  const [logout, setLogOut] = useState(false);
   const [logIn, setLogin] = useState(true);
+  const [overlay, setOverlay] = useState(false);
 
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
@@ -47,6 +64,8 @@ function App() {
       }
     });
   }, []);
+
+  //console.log(user);
 
   const handleLogout = () => {
     signOut(auth).then(() => {
@@ -68,7 +87,9 @@ function App() {
           setUser,
           user,
           active,
-          Logout,
+          logout,
+          overlay,
+          setOverlay,
           setLogOut,
           logIn,
           setLogin,
@@ -82,8 +103,6 @@ function App() {
             element={
               <LoginPage
                 PostContext={PostContext}
-                setActive={setActive}
-                setUser={setUser}
               />
             }
           />
@@ -91,10 +110,7 @@ function App() {
           <Route path="/blog" element={<Blog PostContext={PostContext} />}>
             <Route path="/blog/feed" element={<Feed />} />
             <Route path="/blog/bookmark" element={<Bookmark />} />
-            <Route
-              path="/blog/teamBlogs"
-              element={<TeamBlogs user={user} setActive={setActive} />}
-            />
+            <Route path="/blog/teamBlogs" element={<TeamBlogs user={user} />} />
             <Route path="/blog/drafts" element={<Drafts />} />
             <Route path="/blog/analytics" element={<Analytics />} />
             <Route path="/blog/programming" element={<Programming />} />
@@ -108,14 +124,17 @@ function App() {
               element={<Account PostContext={PostContext} />}
             />
             <Route path="/blog/notification" element={<Notification />} />
-            <Route path="/blog/blogSection/:id" element={<BlogSection />} />
+            <Route
+              path="/blog/blogSection/:id"
+              element={<BlogSection PostContext={PostContext} />}
+            />
             <Route
               path="/blog/updateBlog/:id"
-              element={<PostBlog user={user} setActive={setActive} />}
+              element={<PostBlog PostContext={PostContext} />}
             />
             <Route
               path="/blog/postBlog"
-              element={<PostBlog user={user} setActive={setActive} />}
+              element={<PostBlog PostContext={PostContext} />}
             />
             <Route
               path="/blog/logout"

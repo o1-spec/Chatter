@@ -1,7 +1,23 @@
 import { Link } from "react-router-dom";
 
-function Trending({ blue, setBlue, activeLink, setActiveLink }) {
-  const handleLinkClick = (linkName) => {
+interface TrendingProps {
+  blue: boolean;
+  setBlue: (value: boolean) => void;
+  activeLink: string | null;
+  setBlogNav: (value: boolean) => void;
+  setSearchOpen: (value: boolean) => void;
+  setActiveLink: (value: string | null) => void;
+}
+
+function Trending({
+  blue,
+  setBlue,
+  activeLink,
+  setBlogNav,
+  setSearchOpen,
+  setActiveLink,
+}: TrendingProps) {
+  const handleLinkClick = (linkName: string) => {
     if (activeLink === linkName) {
       setActiveLink(null);
       setBlue(false);
@@ -23,7 +39,11 @@ function Trending({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "programming" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/programming"
-            onClick={() => handleLinkClick("programming")}
+            onClick={() => {
+              setBlogNav(false);
+              handleLinkClick("programming");
+              setSearchOpen(false);
+            }}
           >
             Programing
           </Link>
@@ -34,7 +54,11 @@ function Trending({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "dataScience" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/dataScience"
-            onClick={() => handleLinkClick("dataScience")}
+            onClick={() => {
+              setSearchOpen(false);
+              setBlogNav(false);
+              handleLinkClick("dataScience");
+            }}
           >
             Data Science
           </Link>
@@ -45,7 +69,11 @@ function Trending({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "technology" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/technology"
-            onClick={() => handleLinkClick("technology")}
+            onClick={() => {
+              setBlogNav(false);
+              setSearchOpen(false);
+              handleLinkClick("technology");
+            }}
           >
             Technology
           </Link>
@@ -56,7 +84,11 @@ function Trending({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "machineLearning" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/machineLearning"
-            onClick={() => handleLinkClick("machineLearning")}
+            onClick={() => {
+              setBlogNav(false);
+              setSearchOpen(false);
+              handleLinkClick("machineLearning");
+            }}
           >
             Machine Learning
           </Link>
@@ -67,7 +99,11 @@ function Trending({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "politics" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/politics"
-            onClick={() => handleLinkClick("politics")}
+            onClick={() => {
+              setBlogNav(false);
+              handleLinkClick("politics");
+              setSearchOpen(false);
+            }}
           >
             Politics
           </Link>
@@ -78,7 +114,11 @@ function Trending({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "all" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/all"
-            onClick={() => handleLinkClick("all")}
+            onClick={() => {
+              setSearchOpen(false);
+              setBlogNav(false);
+              handleLinkClick("all");
+            }}
           >
             See all
           </Link>

@@ -1,7 +1,23 @@
 import { Link } from "react-router-dom";
 
-function Overview({ blue, setBlue, activeLink, setActiveLink }) {
-  const handleLinkClick = (linkName) => {
+interface OverviewProps {
+  blue: boolean;
+  setBlue: (value: boolean) => void;
+  activeLink: string | null;
+  setBlogNav: (value: boolean) => void;
+  setSearchOpen: (value: boolean) => void;
+  setActiveLink: (value: string | null) => void;
+}
+
+function Overview({
+  blue,
+  setBlue,
+  activeLink,
+  setBlogNav,
+  setActiveLink,
+  setSearchOpen
+}: OverviewProps) {
+  const handleLinkClick = (linkName: string) => {
     if (activeLink === linkName) {
       setActiveLink(null);
       setBlue(false);
@@ -14,7 +30,7 @@ function Overview({ blue, setBlue, activeLink, setActiveLink }) {
     <div className="pb-7">
       <h5 className="text-[17px] pb-5 text-textBlack font-semibold">
         Overview
-      </h5> 
+      </h5>
       <ul className="flex flex-col gap-3.5 pl-6">
         <li>
           <Link
@@ -22,7 +38,11 @@ function Overview({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "feed" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/feed"
-            onClick={() => handleLinkClick("feed")}
+            onClick={() => {
+              setSearchOpen(false)
+              setBlogNav(false);
+              handleLinkClick("feed");
+            }}
           >
             <img src="/Images/feed.svg" className="w-3" alt="Feed-img" />
             <span>Feed</span>
@@ -34,7 +54,11 @@ function Overview({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "bookmark" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/bookmark"
-            onClick={() => handleLinkClick("bookmark")}
+            onClick={() => {
+              setSearchOpen(false)
+              setBlogNav(false);
+              handleLinkClick("bookmark");
+            }}
           >
             <img
               src="/Images/bookmark.svg"
@@ -50,7 +74,11 @@ function Overview({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "teamBlogs" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/teamBlogs"
-            onClick={() => handleLinkClick("teamBlogs")}
+            onClick={() => {
+              setSearchOpen(false)
+              setBlogNav(false);
+              handleLinkClick("teamBlogs");
+            }}
           >
             <img
               src="/Images/teamBlogs.svg"
@@ -66,7 +94,11 @@ function Overview({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "drafts" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/drafts"
-            onClick={() => handleLinkClick("drafts")}
+            onClick={() => {
+              setSearchOpen(false)
+              setBlogNav(false);
+              handleLinkClick("drafts");
+            }}
           >
             <img src="/Images/drafts.svg" className="w-3" alt="Drafts-img" />
             <span>Drafts</span>
@@ -78,7 +110,11 @@ function Overview({ blue, setBlue, activeLink, setActiveLink }) {
               activeLink === "analytics" && blue ? "text-textBlue" : ""
             }`}
             to="/blog/analytics"
-            onClick={() => handleLinkClick("analytics")}
+            onClick={() => {
+              setSearchOpen(false)
+              setBlogNav(false);
+              handleLinkClick("analytics");
+            }}
           >
             <img
               src="/Images/analytics.svg"

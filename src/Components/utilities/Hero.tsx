@@ -1,7 +1,40 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
+import { User } from "firebase/auth";
 
-const textVariants = {
+interface TextVariants extends Variants {
+  initial: {
+    x?: number;
+    y?: number;
+    opacity: number;
+  };
+  animate: {
+    x?: number;
+    y?: number;
+    opacity: number;
+    transition: {
+      duration: number;
+      staggerChildren?: number;
+      repeat?: number;
+    };
+  };
+  scrollButton: {
+    opacity: number;
+    y: number;
+    transition: {
+      duration: number;
+      repeat: number;
+    };
+  };
+  bgImage: {
+    opacity: number;
+    transition: {
+      duration: number;
+    };
+  };
+}
+
+const textVariants: TextVariants = {
   initial: {
     x: -500,
     opacity: 0,
@@ -23,36 +56,30 @@ const textVariants = {
     },
   },
   bgImage: {
-    initial: {
-      opacity: 0,
-    },
-    animate: {
-      opacity: 1,
-      transition: {
-        duration: 1.2,
-      },
+    opacity: 0,
+    transition: {
+      duration: 2,
     },
   },
 };
 
-function Hero({ user }) {
+function Hero({ user }: { user: User | null }) {
   return (
     <div className="relative w-full h-full flex items-center lg:items-start justify-center md:py-28 py-32 lg:justify-start">
       <motion.div
-        variants={textVariants.bgImage}
         initial="initial"
         animate="animate"
         className={
           user
-            ? "hero-bg absolute top-12 left-0 right-0 bottom-0 w-full h-[110%] -z-10"
-            : "hero-bg absolute top-12 left-0 right-0 bottom-0 w-full h-full -z-10"
+            ? "hero-bg absolute top-12 left-0 right-0 bottom-0 w-full h-[100%] -z-10"
+            : "hero-bg absolute top-12 left-0 right-0 bottom-0 w-full h-[90%] -z-10"
         }
       ></motion.div>
       <motion.div
         variants={textVariants}
         initial="initial"
         animate="animate"
-        className="flex flex-col gap-8 px-3 lg:px-20 items-start"
+        className="flex flex-col gap-8 px-3 lg:px-20 md:pt-12 items-start"
       >
         <motion.h5
           variants={textVariants}

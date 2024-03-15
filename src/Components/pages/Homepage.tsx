@@ -6,8 +6,13 @@ import Why from "../utilities/Why";
 import Owner from "../utilities/Owner";
 import Creators from "../utilities/Creators";
 import { useContext } from "react";
+import { PostContextValue } from "../../App";
 
-function Homepage({ PostContext }) {
+interface HomepageProp {
+  PostContext: React.Context<PostContextValue>;
+}
+
+function Homepage({ PostContext }: HomepageProp) {
   const { user, setLogin } = useContext(PostContext);
   console.log(user);
   return (
@@ -20,7 +25,7 @@ function Homepage({ PostContext }) {
       <Creators />
       <Footer />
     </div>
-  ); 
+  );
 }
 
 export default Homepage;

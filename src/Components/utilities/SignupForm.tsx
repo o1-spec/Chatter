@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
+import { User } from "firebase/auth";
 
 const initialState = {
   firstName: "",
@@ -19,7 +20,12 @@ const initialState = {
   confirmPassword: "",
 };
 
-function SignupForm({ setActive, setUser, setLogin }) {
+interface SignFormProps {
+  setUser: (user: User) => void;
+  setLogin: (value: boolean) => void;
+}
+
+function SignupForm({ setUser, setLogin }: SignFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
   const googleProvider = new GoogleAuthProvider();
@@ -33,7 +39,7 @@ function SignupForm({ setActive, setUser, setLogin }) {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
 
@@ -109,7 +115,7 @@ function SignupForm({ setActive, setUser, setLogin }) {
     }
   };
 
-  const handleAuth = async (e) => {
+  const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       if (password !== confirmPassword) {
@@ -151,23 +157,25 @@ function SignupForm({ setActive, setUser, setLogin }) {
       }
       navigate("/blog/feed");
       setLogin(true);
-    } catch (error) {
-      const notify = () => {
-        toast.error(`${error.message}`, {
-          position: "bottom-left",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          style: {
-            fontSize: "1rem",
-          },
-        });
-      };
-      notify();
+    } catch (error : unknown) {
+      if (error instanceof Error) {
+        const notify = () => {
+          toast.error(`${error}`, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            style: {
+              fontSize: "1rem",
+            },
+          });
+        };
+        notify();
+      }
     }
   };
   return (

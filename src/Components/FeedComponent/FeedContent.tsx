@@ -17,14 +17,7 @@ function FeedContent() {
         recent={recent}
         setRecent={setRecent}
       />
-      <FeedBox
-        forYou={forYou}
-        setForYou={setForYou}
-        featured={featured}
-        setFeatured={setFeatured}
-        recent={recent}
-        setRecent={setRecent}
-      />
+      <FeedBox forYou={forYou} featured={featured} recent={recent} />
     </div>
   );
 }

@@ -5,19 +5,32 @@ import { Excerpts } from "../utilities/Excerpts";
 import { Link, useNavigate } from "react-router-dom";
 import Spinner from "../utilities/Spinner";
 import { toast } from "react-toastify";
+import { User } from "firebase/auth";
 
-function TeamBlogs({ user, setActive }) {
+interface BlogInterface {
+  filter(arg0: (blog: never) => boolean): BlogInterface[];
+  id: string;
+  userId: string;
+  imageUrl: string;
+  category: string;
+  author: string;
+  title: string;
+  description: string;
+  imgUrl: string;
+}
+
+function TeamBlogs({ user }: { user: User | null }) {
   const [loading, setLoading] = useState(true);
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState<BlogInterface[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, "blogs"),
       (snapshot) => {
-        let list = [];
+        const list: BlogInterface[] = [];
         snapshot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
+          list.push({ id: doc.id, ...doc.data() } as BlogInterface);
         });
 
         setBlogs(list);
@@ -66,14 +79,16 @@ function TeamBlogs({ user, setActive }) {
     );
   }
 
-  let teamBlogs = [];
-  blogs.map((blog) => {
-    if (blog.id === user.uid || blog.userId === user.uid) {
+  const teamBlogs: BlogInterface[] = blogs.filter(
+    (blog) => blog.id === user?.uid || blog.userId === user?.uid
+  );
+  /*blogs?.map((blog) => {
+    if (blog.id === user?.uid || blog.userId === user?.uid) {
       teamBlogs.push(blog);
     } else {
       return;
     }
-  });
+  });*/
 
   //console.log(teamBlogs)
 

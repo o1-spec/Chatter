@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { User } from "firebase/auth";
 
-function Nav({ user, setLogin }) {
+function Nav({
+  user,
+  setLogin,
+}: {
+  user: User | null;
+  setLogin: (isLoggedIn: boolean) => void;
+}) {
   const [nav, setNav] = useState(false);
 
   function handleNav() {
@@ -23,7 +30,7 @@ function Nav({ user, setLogin }) {
         className={
           nav === false
             ? "fixed md:relative md:translate-y-0 -translate-y-[100%] transition-all duration-300 flex flex-col items-center md:justify-center justify-start md:flex-row top-0 left-0 right-0 md:h-fit h-[100vh] w-full bottom-0 bg-textWhite pl-4 md:pl-0 md:bg-none md:pt-0 pt-20 md:pr-0 pr-1 md:items-center md:gap-8 gap-8 z-20"
-            : "fixed md:relative md:translate-y-0 translate-y-0 transition-all duration-300 flex flex-col items-center md:justify-center justify-start md:flex-row top-0 left-0 md:h-fit right-0 min-h-[100vh] w-full bottom-0 bg-textWhite pl-4 md:pl-0 md:bg-none md:pt-0 pt-20 md:pr-0 pr-1 md:items-center md:gap-8 gap-8 z-20"
+            : "fixed md:relative md:translate-y-0 translate-y-0 transition-all duration-300 flex flex-col items-center md:justify-center justify-start md:flex-row top-0 left-0 md:h-fit right-0 min-h-[100vh] w-full bottom-0 bg-textWhite pl-4 md:pl-0 md:bg-none md:pt-0 pt-20 md:pr-0 pr-1 md:items-center md:gap-8 gap-8 z-20 md:z-0"
         }
       >
         <h3 className="lg:text-3xl md:hidden text-3xl text-textBlue uppercase font-bold">
@@ -102,17 +109,17 @@ function Nav({ user, setLogin }) {
             </span>
           </Link>
         ) : (
-          <div className="hidden">
+          <div className="hidden md:flex md:gap-4">
             <Link
               to="/login"
-              className=" text-textBlue border text-sm border-textBlue px-6 py-2 rounded-lg"
+              className=" text-textBlue border text-sm border-textBlue px-6 py-2 h-fit rounded-lg"
               onClick={() => setLogin(true)}
             >
               Login
             </Link>
             <Link
               to="/login"
-              className="text-textWhite text-[15px] border bg-textBlue px-6 py-2 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
+              className="text-textWhite text-[15px] text-center border bg-textBlue px-6 py-2 rounded-lg h-fit w-28 transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
               onClick={() => setLogin(false)}
             >
               Sign Up

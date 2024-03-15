@@ -14,10 +14,12 @@
     "aos": "^2.3.4",
     "firebase": "^10.8.1",
     "framer-motion": "^11.0.8",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-datetime": "^3.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.2",
+    "react-ga": "^3.3.1",
+    "react-router-dom": "^6.22.3",
     "react-toastify": "^10.0.4"
   },
   "devDependencies": {

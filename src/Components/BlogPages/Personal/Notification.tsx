@@ -8,7 +8,7 @@ function Notification() {
           <div className="flex flex-col gap-4">
             <h2 className="text-4xl font-semibold">Notifications</h2>
             <div className="flex flex-col items-center justify-center gap-4">
-              <span className="text-[18px] text-center pt-24 pl-10 inline-block">
+              <span className="text-[18px] text-center pt-24 pl-2 sm:pl-10 inline-block">
                 OOPs You dont have any Notification 🥲. Go back to the feed to
                 enjoy more content ☺️
               </span>
