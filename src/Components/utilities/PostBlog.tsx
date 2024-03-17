@@ -14,7 +14,6 @@ import {
   doc,
 } from "firebase/firestore";
 import { PostContextValue } from "../../App";
-import { User } from "firebase/auth";
 
 const initialState = {
   title: "",
@@ -63,7 +62,7 @@ function PostBlog({ PostContext }: PostBlogProps) {
   const [exitBox, setExitBox] = useState(false);
   const [comments, setComments] = useState([]);
   const [progress, setProgress] = useState<Progress>(null);
-
+  let [likes, setLikes] = useState([]);
   const { id } = useParams();
 
   const { title, category, description } = form;
@@ -124,11 +123,13 @@ function PostBlog({ PostContext }: PostBlogProps) {
 
   const getBlogDetail = async () => {
     const docRef = doc(db, "blogs", id);
+    const blogDetail = await getDoc(docRef);
     const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {
       setForm({ ...snapshot.data() });
     }
     setComments(snapshot.data().comments ? snapshot.data().comments : []);
+    setLikes(blogDetail.data().likes ? blogDetail.data().likes : []);
   };
 
   const handlePlus = () => {
@@ -327,7 +328,7 @@ function PostBlog({ PostContext }: PostBlogProps) {
                 onChange={handleChange}
                 value={description}
                 name="description"
-                style={{ height: "1120px" }}
+                style={{ minHeight: "120px" }}
               />
             </div>
           </div>

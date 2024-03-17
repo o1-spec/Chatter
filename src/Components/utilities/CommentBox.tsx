@@ -8,6 +8,7 @@ function CommentBox({ userComment, setUserComment, handleComment, userId }) {
         <textarea
           rows="4"
           value={userComment}
+          className="focus:outline-textBlue border-1 border-textBlack w-[60vw]"
           onChange={(e) => setUserComment(e.target.value)}
         ></textarea>
       </form>
@@ -18,7 +19,11 @@ function CommentBox({ userComment, setUserComment, handleComment, userId }) {
         </>
       ) : (
         <>
-          <button type="submit" onClick={handleComment}>
+          <button
+            type="submit"
+            className="text-textWhite text-[15px] text-center border bg-textBlue px-6 py-2 rounded-lg h-fit w-40 transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
+            onClick={handleComment}
+          >
             Post Comment
           </button>
         </>

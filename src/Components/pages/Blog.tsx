@@ -86,7 +86,11 @@ function Blog({ PostContext }: LogoutProps) {
         onClick={() => setBlogNav(false)}
       ></div>
       <div className="flex h-full">
-        <BlogNav blogNav={blogNav} setBlogNav={setBlogNav}  setSearchOpen={setSearchOpen}/>
+        <BlogNav
+          blogNav={blogNav}
+          setBlogNav={setBlogNav}
+          setSearchOpen={setSearchOpen}
+        />
         <div className="w-[100vw] md:pl-[16%] overflow-hidden">
           <BlogHead
             handleSearch={handleSearch}

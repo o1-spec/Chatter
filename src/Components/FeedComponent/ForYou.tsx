@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-//import { getDownloadURL, listAll, ref } from "firebase/storage";
-//import { storage } from "../../firebase";
-import { db } from "../../firebase";
+import {
+  collection,
+  onSnapshot,
+  getDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import { db , auth} from "../../firebase";
 import { Excerpts } from "../utilities/Excerpts";
 import { Link } from "react-router-dom";
 import Spinner from "../utilities/Spinner";
 import { toast } from "react-toastify";
 import { TrendingInterface } from "../BlogPages/Trending/TrendingInterface";
+import { logBookmark } from "../BlogPages/AnalyticsFunctions";
 
 function ForYou() {
   const [loading, setLoading] = useState(true);
@@ -76,6 +81,7 @@ function ForYou() {
     fetchImages();
   }, []);
 */
+
   useEffect(() => {
     const storedBookmarkString = localStorage.getItem("bookmarkedBlogs");
     if (storedBookmarkString) {
@@ -91,6 +97,7 @@ function ForYou() {
 
   //console.log(bookmarkedBlogs);
   console.log(totalBlogs);
+
   /*
   const getImagePaths = async () => {
     try {
@@ -167,6 +174,81 @@ function ForYou() {
     setBookmark(true);
   };
 
+  const handleLike = async (blogId: string) => {
+    const userId: string | undefined = auth.currentUser?.uid;
+    const blogRef = doc(db, "blogs", blogId);
+    try {
+      const blogSnapshot = await getDoc(blogRef);
+      const blogData = blogSnapshot.data();
+      const currentLikes = blogData?.likes || [];
+
+      if (currentLikes.includes(userId)) {
+        return toast.error("You already liked this post!", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      }
+
+      await updateDoc(blogRef, {
+        likes: [...currentLikes, userId],
+      });
+
+      // Fetch the updated likes count from Firestore
+      const updatedSnapshot = await getDoc(blogRef);
+      const updatedData = updatedSnapshot.data();
+      const updatedLikes = updatedData?.likes || [];
+
+      // Update the local state with the updated likes count
+      setTotalBlogs((prevBlogs) => {
+        return prevBlogs.map((blog) => {
+          if (blog.id === blogId) {
+            return { ...blog, likes: updatedLikes };
+          } else {
+            return blog;
+          }
+        });
+      });
+
+      toast.success("You liked the post!", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    } catch (error) {
+      console.error("Error updating likes:", error);
+      toast.error("Failed to like the post. Please try again later.", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    }
+  };
+
   return (
     <div className="py-5 pt-1 min-h-[40vh]">
       {loading ? (
@@ -213,12 +295,15 @@ function ForYou() {
                 </div>
                 <div className="flex items-center justify-between pt-4 pb-4">
                   <div className="flex items-center gap-2">
-                    <i className="fa-regular fa-heart cursor-pointer"></i>
-                    <span className="text-sm">{blog.likes}</span>
+                    <i onClick={()=> handleLike(blog.id)} className="fa-regular fa-heart cursor-pointer"></i>
+                    <span className="text-sm">{blog.likes.length}</span>
                   </div>
                   <div
                     className="flex items-center gap-2"
-                    onClick={() => handleBookmark(blog.id)}
+                    onClick={() => {
+                      logBookmark(blog?.id, blog?.title);
+                      handleBookmark(blog.id);
+                    }}
                   >
                     <i
                       className={

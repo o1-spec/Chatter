@@ -6,6 +6,7 @@ import {
   Timestamp,
   updateDoc,
   doc,
+  getDoc,
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -17,6 +18,7 @@ import { toast } from "react-toastify";
 
 function BlogSection({ PostContext }) {
   const { user } = useContext(PostContext);
+  const { id } = useParams();
   //console.log(user)
   const userId = user?.uid;
   const [loading, setLoading] = useState(true);
@@ -24,7 +26,7 @@ function BlogSection({ PostContext }) {
   const [comments, setComments] = useState([]);
   const [userComment, setUserComment] = useState("");
   const [selectedBlog, setSelectedBlog] = useState(null);
-  let [likes, setLikes] = useState([]);
+  
 
   useEffect(() => {
     const unsub = onSnapshot(
@@ -48,7 +50,6 @@ function BlogSection({ PostContext }) {
     };
   }, []);
 
-  const { id } = useParams();
   console.log(blogs);
   useEffect(() => {
     if (blogs.length > 0) {
@@ -56,6 +57,17 @@ function BlogSection({ PostContext }) {
       setSelectedBlog(foundBlog);
     }
   }, [blogs, id]);
+
+  useEffect(() => {
+    id && getBlogDetail();
+  }, [id]);
+
+  const getBlogDetail = async () => {
+    const docRef = doc(db, "blogs", id);
+    const blogDetail = await getDoc(docRef);
+    const snapshot = await getDoc(docRef);
+    setComments(snapshot.data().comments ? snapshot.data().comments : []);
+  };
 
   console.log(selectedBlog);
 
@@ -78,6 +90,8 @@ function BlogSection({ PostContext }) {
     setUserComment("");
   };
 
+
+  console.log(selectedBlog);
   if (loading) {
     return (
       <div>
@@ -121,13 +135,13 @@ function BlogSection({ PostContext }) {
               {selectedBlog?.author}
             </p>
           </div>
-          <div className="pt-5">
-            <span className="text-textGrey text-2xl">Comments :</span>
-            <p>{selectedBlog?.commments?.length} &nbsp; comments</p>
+          <div className="pt-12">
+            <span className="text-textGrey text-2xl pb-1">Comments :</span>
+            <p className="text-lg my-3 pb-3 pt-2 bg-textBlue text-textWhite px-2 rounded-md w-fit">
+              {selectedBlog?.comments?.length} comments
+            </p>
             {selectedBlog?.comments?.length === 0 ? (
-              <Comments
-                msg={"No comments yet posted, Be the first to comment"}
-              />
+              <p>No comments yet on this blog, Be the first to comment</p>
             ) : (
               <>
                 {selectedBlog?.comments.map(

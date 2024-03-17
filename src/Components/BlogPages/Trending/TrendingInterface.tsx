@@ -8,7 +8,7 @@ export interface TrendingInterface {
   description: string;
   icon: string;
   imageUrl: string;
-  likes: number;
+  likes: [];
   views: number;
   title: string;
   uid: string;

@@ -1,14 +1,26 @@
 import { useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../firebase";
+import {
+  collection,
+  onSnapshot,
+  getDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import { auth, db } from "../../../firebase";
 import { Excerpts } from "../../utilities/Excerpts";
 import Spinner from "../../utilities/Spinner";
 import { Link } from "react-router-dom";
 import { TrendingInterface } from "./TrendingInterface";
+import { toast } from "react-toastify";
+import { logBookmark } from "../AnalyticsFunctions";
 
 function Politics() {
   const [loading, setLoading] = useState(true);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
+  const [bookmarkedBlogs, setBookmarkedBlogs] = useState<TrendingInterface[]>(
+    []
+  );
+  const [bookmark, setBookmark] = useState(false);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -44,6 +56,19 @@ function Politics() {
     fetchBlog();
   }, []);
 
+  useEffect(() => {
+    const storedBookmarkString = localStorage.getItem("bookmarkedBlogs");
+    if (storedBookmarkString) {
+      const storedBookmark: TrendingInterface[] =
+        JSON.parse(storedBookmarkString);
+      setBookmarkedBlogs(storedBookmark);
+    }
+  }, []);
+
+  if (bookmark) {
+    console.log("yes");
+  }
+
   //console.log(totalBlogs);
 
   const politicBlog: TrendingInterface[] = [];
@@ -70,6 +95,126 @@ function Politics() {
     });
 
     return formattedDate;
+  };
+
+  const handleBookmark = (blogId: string) => {
+    const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
+
+    let updatedBookmarks: TrendingInterface[] = [];
+
+    if (isBookmarked) {
+      updatedBookmarks = bookmarkedBlogs.filter((blog) => blog.id !== blogId);
+      toast.error("One Content removed from Bookmarks", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    } else {
+      const blogToAdd = totalBlogs.find((blog) => blog.id === blogId);
+      if (blogToAdd) {
+        updatedBookmarks = [...bookmarkedBlogs, blogToAdd];
+        toast.success("One Content Bookmarked", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      }
+    }
+
+    localStorage.setItem("bookmarkedBlogs", JSON.stringify(updatedBookmarks));
+    setBookmarkedBlogs(updatedBookmarks);
+    setBookmark(true);
+  };
+
+  const handleLike = async (blogId: string) => {
+    const userId: string | undefined = auth.currentUser?.uid;
+    const blogRef = doc(db, "blogs", blogId);
+    try {
+      const blogSnapshot = await getDoc(blogRef);
+      const blogData = blogSnapshot.data();
+      const currentLikes = blogData?.likes || [];
+
+      if (currentLikes.includes(userId)) {
+        return toast.error("You already liked this post!", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      }
+
+      await updateDoc(blogRef, {
+        likes: [...currentLikes, userId],
+      });
+
+      // Fetch the updated likes count from Firestore
+      const updatedSnapshot = await getDoc(blogRef);
+      const updatedData = updatedSnapshot.data();
+      const updatedLikes = updatedData?.likes || [];
+
+      // Update the local state with the updated likes count
+      setTotalBlogs((prevBlogs) => {
+        return prevBlogs.map((blog) => {
+          if (blog.id === blogId) {
+            return { ...blog, likes: updatedLikes };
+          } else {
+            return blog;
+          }
+        });
+      });
+
+      toast.success("You liked the post!", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    } catch (error) {
+      console.error("Error updating likes:", error);
+      toast.error("Failed to like the post. Please try again later.", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    }
   };
 
   if (loading) {
@@ -136,11 +281,26 @@ function Politics() {
                   </div>
                   <div className="flex items-center justify-between pt-4 pb-4">
                     <div className="flex items-center gap-2">
-                      <i className="fa-regular fa-heart cursor-pointer"></i>
-                      <span className="text-sm">{blog.likes}</span>
+                      <i
+                        onClick={() => handleLike(blog.id)}
+                        className="fa-regular fa-heart cursor-pointer"
+                      ></i>
+                      <span className="text-sm">{blog.likes.length}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <i className="fa-regular fa-bookmark cursor-pointer"></i>
+                    <div
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        logBookmark(blog?.id, blog?.title);
+                        handleBookmark(blog.id);
+                      }}
+                    >
+                      <i
+                        className={
+                          bookmarkedBlogs.some((b) => b.id === blog.id)
+                            ? "fa-regular fa-bookmark text-textBlue cursor-pointer"
+                            : "fa-regular fa-bookmark cursor-pointer"
+                        }
+                      ></i>
                       <span className="text-sm">30</span>
                     </div>
                     <div className="flex items-center gap-2">

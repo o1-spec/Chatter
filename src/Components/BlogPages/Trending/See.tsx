@@ -7,10 +7,16 @@ import { Excerpts } from "../../utilities/Excerpts";
 import { Link } from "react-router-dom";
 import Spinner from "../../utilities/Spinner";
 import { TrendingInterface } from "./TrendingInterface";
+import { toast } from "react-toastify";
+import { logBookmark } from "../AnalyticsFunctions";
 
 function See() {
   const [loading, setLoading] = useState(true);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
+  const [bookmarkedBlogs, setBookmarkedBlogs] = useState<TrendingInterface[]>(
+    []
+  );
+  const [bookmark, setBookmark] = useState(false);
   //const [, setImageUrl] = useState([]);
 
   useEffect(() => {
@@ -46,6 +52,19 @@ function See() {
     };
     fetchBlog();
   }, []);
+
+  useEffect(() => {
+    const storedBookmarkString = localStorage.getItem("bookmarkedBlogs");
+    if (storedBookmarkString) {
+      const storedBookmark: TrendingInterface[] =
+        JSON.parse(storedBookmarkString);
+      setBookmarkedBlogs(storedBookmark);
+    }
+  }, []);
+
+  if (bookmark) {
+    console.log("yes");
+  }
 
   //console.log(totalBlogs);
   /*
@@ -100,6 +119,51 @@ function See() {
     });
 
     return formattedDate;
+  };
+
+  const handleBookmark = (blogId: string) => {
+    const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
+
+    let updatedBookmarks: TrendingInterface[] = [];
+
+    if (isBookmarked) {
+      updatedBookmarks = bookmarkedBlogs.filter((blog) => blog.id !== blogId);
+      toast.error("One Content removed from Bookmarks", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    } else {
+      const blogToAdd = totalBlogs.find((blog) => blog.id === blogId);
+      if (blogToAdd) {
+        updatedBookmarks = [...bookmarkedBlogs, blogToAdd];
+        toast.success("One Content Bookmarked", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      }
+    }
+
+    localStorage.setItem("bookmarkedBlogs", JSON.stringify(updatedBookmarks));
+    setBookmarkedBlogs(updatedBookmarks);
+    setBookmark(true);
   };
 
   if (loading) {
@@ -167,8 +231,20 @@ function See() {
                       <i className="fa-regular fa-heart cursor-pointer"></i>
                       <span className="text-sm">{blog.likes}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <i className="fa-regular fa-bookmark cursor-pointer"></i>
+                    <div
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        logBookmark(blog?.id, blog?.title);
+                        handleBookmark(blog.id);
+                      }}
+                    >
+                      <i
+                        className={
+                          bookmarkedBlogs.some((b) => b.id === blog.id)
+                            ? "fa-regular fa-bookmark text-textBlue cursor-pointer"
+                            : "fa-regular fa-bookmark cursor-pointer"
+                        }
+                      ></i>
                       <span className="text-sm">30</span>
                     </div>
                     <div className="flex items-center gap-2">

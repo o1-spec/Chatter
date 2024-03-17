@@ -100,11 +100,7 @@ function App() {
           <Route path="/" element={<Homepage PostContext={PostContext} />} />
           <Route
             path="/login"
-            element={
-              <LoginPage
-                PostContext={PostContext}
-              />
-            }
+            element={<LoginPage PostContext={PostContext} />}
           />
           <Route path="/confirmation" element={<Confirmation />} />
           <Route path="/blog" element={<Blog PostContext={PostContext} />}>
