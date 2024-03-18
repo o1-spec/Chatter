@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  getDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 //import { getDownloadURL, listAll, ref } from "firebase/storage";
 //import { storage } from "../../../firebase";
-import { db } from "../../../firebase";
+import { db, auth } from "../../../firebase";
 import { Excerpts } from "../../utilities/Excerpts";
 import { Link } from "react-router-dom";
 import Spinner from "../../utilities/Spinner";
@@ -12,6 +18,7 @@ import { logBookmark } from "../AnalyticsFunctions";
 
 function See() {
   const [loading, setLoading] = useState(true);
+  const [like, setLike] = useState(false);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
   const [bookmarkedBlogs, setBookmarkedBlogs] = useState<TrendingInterface[]>(
     []
@@ -166,6 +173,93 @@ function See() {
     setBookmark(true);
   };
 
+  const handleLike = async (blogId: string) => {
+    const userId: string | undefined = auth.currentUser?.uid;
+    const blogRef = doc(db, "blogs", blogId);
+    try {
+      const blogSnapshot = await getDoc(blogRef);
+      const blogData = blogSnapshot.data();
+      const currentLikes = blogData?.likes || [];
+
+      if (currentLikes.includes(userId)) {
+        // If user already liked, remove like
+        const updatedLikes = currentLikes.filter(
+          (id: string | undefined) => id !== userId
+        );
+        await updateDoc(blogRef, { likes: updatedLikes });
+
+        setTotalBlogs((prevBlogs) => {
+          return prevBlogs.map((blog) => {
+            if (blog.id === blogId) {
+              return { ...blog, likes: updatedLikes };
+            } else {
+              return blog;
+            }
+          });
+        });
+        setLike(false);
+
+        toast.info("You unliked the post!", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      } else {
+        // If user hasn't liked, add like
+        const updatedLikes = [...currentLikes, userId];
+        await updateDoc(blogRef, { likes: updatedLikes });
+
+        setTotalBlogs((prevBlogs) => {
+          return prevBlogs.map((blog) => {
+            if (blog.id === blogId) {
+              return { ...blog, likes: updatedLikes };
+            } else {
+              return blog;
+            }
+          });
+        });
+
+        setLike(true);
+        toast.success("You liked the post!", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error updating likes:", error);
+      toast.error("Failed to like the post. Please try again later.", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        style: {
+          fontSize: "1rem",
+        },
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="mt-40">
@@ -228,8 +322,15 @@ function See() {
                   </div>
                   <div className="flex items-center justify-between pt-4 pb-4">
                     <div className="flex items-center gap-2">
-                      <i className="fa-regular fa-heart cursor-pointer"></i>
-                      <span className="text-sm">{blog.likes}</span>
+                      <i
+                        onClick={() => handleLike(blog?.id)}
+                        className={
+                          like
+                            ? "fa-regular fa-heart cursor-pointer text-textBlue"
+                            : "fa-regular fa-heart cursor-pointer"
+                        }
+                      ></i>
+                      <span className="text-sm">{blog.likes.length}</span>
                     </div>
                     <div
                       className="flex items-center gap-2"
@@ -245,7 +346,6 @@ function See() {
                             : "fa-regular fa-bookmark cursor-pointer"
                         }
                       ></i>
-                      <span className="text-sm">30</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <img src="/Images/analytics.svg" className="w-3" alt="" />

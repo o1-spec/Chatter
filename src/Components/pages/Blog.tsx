@@ -65,7 +65,7 @@ function Blog({ PostContext }: LogoutProps) {
     setFilteredBlog(filteredBlogs);
   };
 
-  console.log(filteredBlog);
+  //console.log(filteredBlog);
   if (loading) {
     return (
       <div>
@@ -73,7 +73,7 @@ function Blog({ PostContext }: LogoutProps) {
       </div>
     );
   }
-  console.log(totalBlogs);
+  //console.log(totalBlogs);
 
   return (
     <div className="font-dmSans w-full h-full">

@@ -16,6 +16,7 @@ import { logBookmark } from "../AnalyticsFunctions";
 
 function Programming() {
   const [loading, setLoading] = useState(true);
+  const [like, setLike] = useState(false);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
   const [bookmarkedBlogs, setBookmarkedBlogs] = useState<TrendingInterface[]>(
     []
@@ -152,7 +153,53 @@ function Programming() {
       const currentLikes = blogData?.likes || [];
 
       if (currentLikes.includes(userId)) {
-        return toast.error("You already liked this post!", {
+        // If user already liked, remove like
+        const updatedLikes = currentLikes.filter(
+          (id: string | undefined) => id !== userId
+        );
+        await updateDoc(blogRef, { likes: updatedLikes });
+
+        setTotalBlogs((prevBlogs) => {
+          return prevBlogs.map((blog) => {
+            if (blog.id === blogId) {
+              return { ...blog, likes: updatedLikes };
+            } else {
+              return blog;
+            }
+          });
+        });
+
+        setLike(false);
+        toast.info("You unliked the post!", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          style: {
+            fontSize: "1rem",
+          },
+        });
+      } else {
+        // If user hasn't liked, add like
+        const updatedLikes = [...currentLikes, userId];
+        await updateDoc(blogRef, { likes: updatedLikes });
+
+        setTotalBlogs((prevBlogs) => {
+          return prevBlogs.map((blog) => {
+            if (blog.id === blogId) {
+              return { ...blog, likes: updatedLikes };
+            } else {
+              return blog;
+            }
+          });
+        });
+        setLike(false);
+
+        toast.success("You liked the post!", {
           position: "bottom-left",
           autoClose: 5000,
           hideProgressBar: false,
@@ -166,40 +213,6 @@ function Programming() {
           },
         });
       }
-
-      await updateDoc(blogRef, {
-        likes: [...currentLikes, userId],
-      });
-
-      // Fetch the updated likes count from Firestore
-      const updatedSnapshot = await getDoc(blogRef);
-      const updatedData = updatedSnapshot.data();
-      const updatedLikes = updatedData?.likes || [];
-
-      // Update the local state with the updated likes count
-      setTotalBlogs((prevBlogs) => {
-        return prevBlogs.map((blog) => {
-          if (blog.id === blogId) {
-            return { ...blog, likes: updatedLikes };
-          } else {
-            return blog;
-          }
-        });
-      });
-
-      toast.success("You liked the post!", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        style: {
-          fontSize: "1rem",
-        },
-      });
     } catch (error) {
       console.error("Error updating likes:", error);
       toast.error("Failed to like the post. Please try again later.", {
@@ -284,7 +297,11 @@ function Programming() {
                     <div className="flex items-center gap-2">
                       <i
                         onClick={() => handleLike(blog.id)}
-                        className="fa-regular fa-heart cursor-pointer"
+                        className={
+                          like
+                            ? "fa-regular fa-heart cursor-pointer text-textBlue"
+                            : "fa-regular fa-heart cursor-pointer"
+                        }
                       ></i>
                       <span className="text-sm">{blog.likes.length}</span>
                     </div>
@@ -302,7 +319,7 @@ function Programming() {
                             : "fa-regular fa-bookmark cursor-pointer"
                         }
                       ></i>
-                      <span className="text-sm">30</span>
+                      
                     </div>
                     <div className="flex items-center gap-2">
                       <img src="/Images/analytics.svg" className="w-3" alt="" />

@@ -9,6 +9,7 @@ export interface TrendingInterface {
   icon: string;
   imageUrl: string;
   likes: [];
+  comments: [];
   views: number;
   title: string;
   uid: string;

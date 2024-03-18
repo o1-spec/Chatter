@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 interface CommentProp {
-  comment: object;
+  comment: {
+    body: string;
+    createdAt: {
+      seconds: number;
+    };
+    name: string;
+  };
 }
 
 function Comments({ comment }: CommentProp) {

@@ -6,7 +6,7 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-import { db , auth} from "../../firebase";
+import { db, auth } from "../../firebase";
 import { Excerpts } from "../utilities/Excerpts";
 import { Link } from "react-router-dom";
 import Spinner from "../utilities/Spinner";
@@ -96,7 +96,7 @@ function ForYou() {
   }
 
   //console.log(bookmarkedBlogs);
-  console.log(totalBlogs);
+  //console.log(totalBlogs);
 
   /*
   const getImagePaths = async () => {
@@ -182,32 +182,22 @@ function ForYou() {
       const blogData = blogSnapshot.data();
       const currentLikes = blogData?.likes || [];
 
+      let updatedLikes: [];
+
       if (currentLikes.includes(userId)) {
-        return toast.error("You already liked this post!", {
-          position: "bottom-left",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          style: {
-            fontSize: "1rem",
-          },
-        });
+        // Unlike the post
+        updatedLikes = currentLikes.filter((id: string | undefined) => id !== userId);
+        localStorage.setItem(`liked_${blogId}`, "false"); // Update local storage
+      } else {
+        // Like the post
+        updatedLikes = [...currentLikes, userId];
+        localStorage.setItem(`liked_${blogId}`, "true"); // Update local storage
       }
 
-      await updateDoc(blogRef, {
-        likes: [...currentLikes, userId],
-      });
+      // Update Firestore with updated likes
+      await updateDoc(blogRef, { likes: updatedLikes });
 
-      // Fetch the updated likes count from Firestore
-      const updatedSnapshot = await getDoc(blogRef);
-      const updatedData = updatedSnapshot.data();
-      const updatedLikes = updatedData?.likes || [];
-
-      // Update the local state with the updated likes count
+      // Update local state with updated likes
       setTotalBlogs((prevBlogs) => {
         return prevBlogs.map((blog) => {
           if (blog.id === blogId) {
@@ -218,34 +208,15 @@ function ForYou() {
         });
       });
 
-      toast.success("You liked the post!", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        style: {
-          fontSize: "1rem",
-        },
-      });
+      // Notify user about like status
+      if (currentLikes.includes(userId)) {
+        toast.info("You unliked the post!");
+      } else {
+        toast.success("You liked the post!");
+      }
     } catch (error) {
       console.error("Error updating likes:", error);
-      toast.error("Failed to like the post. Please try again later.", {
-        position: "bottom-left",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        style: {
-          fontSize: "1rem",
-        },
-      });
+      toast.error("Failed to like the post. Please try again later.");
     }
   };
 
@@ -294,8 +265,11 @@ function ForYou() {
                   <img className="w-fit" src={blog.imageUrl} alt={blog.title} />
                 </div>
                 <div className="flex items-center justify-between pt-4 pb-4">
-                  <div className="flex items-center gap-2">
-                    <i onClick={()=> handleLike(blog.id)} className="fa-regular fa-heart cursor-pointer"></i>
+                  <div className={`flex items-center gap-2`}>
+                    <i
+                      onClick={() => handleLike(blog.id)}
+                      className="fa-regular fa-heart cursor-pointer"
+                    ></i>
                     <span className="text-sm">{blog.likes.length}</span>
                   </div>
                   <div
@@ -312,7 +286,7 @@ function ForYou() {
                           : "fa-regular fa-bookmark cursor-pointer"
                       }
                     ></i>
-                    <span className="text-sm">30</span>
+
                   </div>
                   <div className="flex items-center gap-2">
                     <img src="/Images/analytics.svg" className="w-3" alt="" />

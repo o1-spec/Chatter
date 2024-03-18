@@ -21,14 +21,14 @@ interface updatedProfile {
 
 function Account({ PostContext }: AccountProps) {
   const { user } = useContext(PostContext);
-  const currentUser: User = auth.currentUser;
+  const currentUser: User | null = auth.currentUser;
   const [update, setUpdate] = useState(true);
   const [newEmail, setNewEmail] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newDisplayName, setNewDisplayName] = useState("");
   const [newPhotoURL, setNewPhotoURL] = useState("");
 
-  const handlePicture = (e: { target: { files: Blob[] } }) => {
+  const handlePicture = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
     setNewPhotoURL(imageUrl);

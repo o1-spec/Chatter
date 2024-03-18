@@ -275,12 +275,26 @@ function PostBlog({ PostContext }: PostBlogProps) {
                   onClick={handleMinus}
                 />
                 <div className="flex gap-2">
-                  <img
-                    className="w-10 cursor-pointer"
-                    src="/Images/picture.png"
-                    alt="picture"
-                    onClick={handlePicture}
-                  />
+                  <label htmlFor="picture">
+                    <img
+                      className="w-10 cursor-pointer"
+                      src="/Images/picture.png"
+                      alt="picture"
+                      onClick={handlePicture}
+                    />
+                    <input
+                      type="file"
+                      id="picture"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        handleImageChange(e);
+                        setFile(e.target.files[0]);
+                        setMinus(false);
+                        setPlus(false);
+                      }}
+                    />
+                  </label>
                   <img
                     className="w-10 cursor-pointer"
                     src="/Images/video.png"
@@ -289,7 +303,7 @@ function PostBlog({ PostContext }: PostBlogProps) {
                 </div>
               </div>
             )}
-            {picture && (
+            {/*picture && (
               <div className="mt-4">
                 <input
                   type="file"
@@ -303,7 +317,7 @@ function PostBlog({ PostContext }: PostBlogProps) {
                   }}
                 />
               </div>
-            )}
+                )*/}
             {imageUrl && (
               <div className="w-[80%] h-fit">
                 <img src={imageUrl} alt="Selected" className="w-full h-full" />

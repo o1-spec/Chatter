@@ -95,8 +95,8 @@ function TeamBlogs({ user }: { user: User | null }) {
   //console.log("blogs", blogs);
   //console.log(user.uid)
   return (
-    <div className="m-7 border border-borderIcon rounded-md h-fit">
-      <div className="px-8 py-6 h-full">
+    <div className="m-7 border border-borderIcon rounded-md min-h-[100vh]">
+      <div className="px-8 md:pt-8 py-6 h-full">
         <h3 className="text-4xl text-textBlack font-semibold">Your Stories</h3>
         <div className="flex flex-col gap-8 pt-8">
           {teamBlogs.map((blog, id) => (
