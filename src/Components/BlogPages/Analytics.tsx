@@ -250,13 +250,13 @@ function Analytics() {
   }
   return (
     <div className="md:m-7 m-3 h-fit">
-      <div className="md:max-w-[98%] mx-auto my-0 py-8 px-3 md:px-0">
+      <div className="md:max-w-[88%] lg:md-w-[98%]  mx-auto my-0 py-8 px-3 md:px-0">
         <div className="flex flex-col pb-6">
           <div className="flex flex-col gap-3 border-b-4 w-full mr-8 border-b-textBlue">
             <h2 className="text-3xl font-semibold">Posts Analytics</h2>
-            <div className="flex items-center gap-1 pb-2">
+            <div className="flex items-center sm:gap-1 gap-2 pb-2">
               <span className="font-semibold">{formattedDate}</span>
-              <span className="text-[14px] pb-4 sm:pb-0">25 days so far</span>
+              <span className="text-[14px] pb-0 sm:pb-0">25 days so far</span>
             </div>
           </div>
           {!highestViews ? (
