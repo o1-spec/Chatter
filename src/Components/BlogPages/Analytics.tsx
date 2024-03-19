@@ -12,6 +12,7 @@ import { db, auth } from "../../firebase";
 import Spinner from "../utilities/Spinner";
 import { logBookmark } from "./AnalyticsFunctions";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 function Analytics() {
   const [like, setLike] = useState(false);
@@ -19,6 +20,9 @@ function Analytics() {
   const [loading, setLoading] = useState(false);
   const [bookmarkedBlogs, setBookmarkedBlogs] = useState<TrendingInterface[]>(
     []
+  );
+  const [highestViews, setHighestViews] = useState<TrendingInterface | null>(
+    null
   );
   const [bookmark, setBookmark] = useState(false);
 
@@ -158,7 +162,7 @@ function Analytics() {
         const updatedLikes = [...currentLikes, userId];
         await updateDoc(blogRef, { likes: updatedLikes });
 
-        setTotalBlogs((prevBlogs) => {
+        setTotalBlogs((prevBlogs: TrendingInterface[]) => {
           return prevBlogs.map((blog) => {
             if (blog.id === blogId) {
               return { ...blog, likes: updatedLikes };
@@ -200,16 +204,21 @@ function Analytics() {
       });
     }
   };
+  useEffect(() => {
+    let maxViews = -1;
+    let highestViewBlog = null;
 
-  let maxViews = -1;
-  let highestViews = null;
+    totalBlogs.forEach((blog) => {
+      if (blog.views > maxViews) {
+        maxViews = blog.views;
+        highestViewBlog = blog;
+      }
+    });
 
-  totalBlogs.forEach((blog) => {
-    if (blog.views > maxViews) {
-      maxViews = blog.views;
-      highestViews = blog;
+    if (highestViewBlog) {
+      setHighestViews(highestViewBlog);
     }
-  });
+  }, [totalBlogs]);
 
   console.log(highestViews);
 
@@ -243,7 +252,7 @@ function Analytics() {
   const shortenedString = slicedArray?.join(" ");
   if (loading) {
     return (
-      <div className="mt-40">
+      <div className="mt-[400px]">
         <Spinner />
       </div>
     );
@@ -260,7 +269,17 @@ function Analytics() {
             </div>
           </div>
           {!highestViews ? (
-            <p className="text-center text-lg py-8">You have not posted any blog yet</p>
+            <div className="flex flex-col gap-4 py-8 items-center">
+              <p className="text-center text-lg pb-1">
+                You have not posted any blog yet
+              </p>
+              <Link
+                className="text-textWhite bg-textBlue px-3 py-4 rounded-md w-fit"
+                to="/blog/publish"
+              >
+                Publish Book
+              </Link>
+            </div>
           ) : (
             <div className="border-b-4 border-b-textBlue pr-10">
               <h5 className="text-xl font-semibold py-3">Posts Highlights</h5>
@@ -282,16 +301,21 @@ function Analytics() {
                       {highestViews?.author}
                     </span>
                     <span className="text-[14px]">
-                      {highestViews?.createdAt.seconds}
+                      {highestViews?.createdAt?.seconds}
                     </span>
                   </div>
                 </div>
-                <h4 className="text-xl font-semibold">{highestViews?.title}</h4>
+                <Link
+                  to={`/blog/blogSection/${highestViews?.id}`}
+                  className="text-xl font-semibold underline"
+                >
+                  {highestViews?.title}
+                </Link>
                 <p>{shortenedString}</p>
                 <div className="flex items-center justify-between pt-4 pb-4">
                   <div className="flex items-center gap-2">
                     <i
-                      onClick={() => handleLike(blog.id)}
+                      onClick={() => handleLike(highestViews?.id)}
                       className={
                         like
                           ? "fa-regular fa-heart cursor-pointer text-textBlue"
