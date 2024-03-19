@@ -35,7 +35,7 @@
 }
 
 .textarea-class {
-  min-height: 1120px;
+  height: 1300px;
   width: 80vw;
   overflow-y: scroll;
 }

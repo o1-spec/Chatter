@@ -21,6 +21,7 @@ const initialState = {
   description: "",
   comments: [],
   likes: [],
+  view: []
 };
 
 const categoryOption = [
@@ -65,7 +66,7 @@ function PostBlog({ PostContext }: PostBlogProps) {
   let [likes, setLikes] = useState([]);
   const { id } = useParams();
 
-  const { title, category, description } = form;
+  const { title, category, description, view } = form;
 
   useEffect(() => {
     const uploadFile = () => {

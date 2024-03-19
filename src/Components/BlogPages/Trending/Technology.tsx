@@ -22,6 +22,7 @@ function Technology() {
     []
   );
   const [bookmark, setBookmark] = useState(false);
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -143,6 +144,30 @@ function Technology() {
     setBookmark(true);
   };
 
+  const handleBlogClick = async (blogId: string) => {
+    try {
+      const blogRef = doc(db, "blogs", blogId);
+      const blogSnapshot = await getDoc(blogRef);
+      const blogData = blogSnapshot.data();
+
+      const updatedViews = (blogData?.views || 0) + 1;
+
+      await updateDoc(blogRef, { views: updatedViews });
+
+      setTotalBlogs((prevBlogs) => {
+        return prevBlogs.map((blog) => {
+          if (blog.id === blogId) {
+            return { ...blog, views: updatedViews };
+          } else {
+            return blog;
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error updating views:", error);
+    }
+  };
+
   const handleLike = async (blogId: string) => {
     const userId: string | undefined = auth.currentUser?.uid;
     const blogRef = doc(db, "blogs", blogId);
@@ -262,7 +287,7 @@ function Technology() {
                     <div className="flex items-center gap-3 sm:justify-normal">
                       <img
                         className="w-20 h-[82px] rounded-full object-cover"
-                        src={blog.icon}
+                        src={blog.icon || "/Images/user.png"}
                         alt={blog.title}
                       />
                       <div>
@@ -279,6 +304,7 @@ function Technology() {
                     </div>
                     <Link
                       to={`/blog/blogSection/${blog.id}`}
+                      onClick={() => handleBlogClick(blog.id)}
                       className="sm:text-2xl text-xl font-semibold underline"
                     >
                       {blog.title}
@@ -288,7 +314,7 @@ function Technology() {
                     </p>
                     <img
                       className="w-fit"
-                      src={blog.imageUrl}
+                      src={blog.imageUrl || blog.imgUrl}
                       alt={blog.title}
                     />
                   </div>
@@ -318,7 +344,6 @@ function Technology() {
                             : "fa-regular fa-bookmark cursor-pointer"
                         }
                       ></i>
-                      
                     </div>
                     <div className="flex items-center gap-2">
                       <img src="/Images/analytics.svg" className="w-3" alt="" />

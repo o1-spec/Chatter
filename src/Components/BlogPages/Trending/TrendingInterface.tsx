@@ -11,6 +11,8 @@ export interface TrendingInterface {
   likes: [];
   comments: [];
   views: number;
+  view: [];
+  userId: string;
   title: string;
   uid: string;
   imgUrl: string;

@@ -99,49 +99,65 @@ function TeamBlogs({ user }: { user: User | null }) {
       <div className="px-8 md:pt-8 py-6 h-full">
         <h3 className="text-4xl text-textBlack font-semibold">Your Stories</h3>
         <div className="flex flex-col gap-8 pt-8">
-          {teamBlogs.map((blog, id) => (
-            <div key={id} className="flex items-start gap-4 w-full">
-              <img
-                className="w-80 h-52 rounded-md"
-                src={blog?.imageUrl || blog.imgUrl}
-                alt={blog?.title}
-              />
-              <div className="flex flex-col gap-1 pt-1">
-                <span className="text-textWhite w-fit bg-textBlue px-2 py-2 rounded-md">
-                  {blog?.category}
-                </span>
-                <div className="flex gap-2 items-center">
-                  <p className="font-semibold text-[18px]">{blog?.author}</p>
-                  <p className="text-[15px]"></p>
-                </div>
-                <Link
-                  to={`/blog/blogSection/${blog.id}`}
-                  className="text-xl font-semibold underline w-fit"
-                >
-                  {blog?.title}
-                </Link>
-                <span>{Excerpts(blog?.description, 120)}</span>
-                <div className="flex items-center gap-2 justify-between w-full">
-                  <img
-                    className="w-6 cursor-pointer"
-                    src="/Images/pencil.svg"
-                    alt="update Icon"
-                    onClick={() => {
-                      navigate(`/blog/updateBlog/${blog?.id}`);
-                    }}
-                  />
-                  <img
-                    className="w-6 cursor-pointer"
-                    src="/Images/delete-2.svg"
-                    alt="Delete Icon"
-                    onClick={() => {
-                      handleDelete(blog?.id);
-                    }}
-                  />
-                </div>
-              </div>
+          {teamBlogs.length === 0 ? (
+            <div className="flex items-center justify-center flex-col gap-3">
+              <p className="text-2xl">Empty</p>
+              <Link
+                to="/blog/postBlog"
+                className="bg-textBlue text-textWhite text-lg rounded-md border border-textBlue hover:bg-textWhite hover:text-textBlue transition-all duration-300 px-4 py-2"
+              >
+                Publish A Blog
+              </Link>
             </div>
-          ))}
+          ) : (
+            <>
+              {teamBlogs.map((blog, id) => (
+                <div key={id} className="flex items-start gap-4 w-full">
+                  <img
+                    className="w-80 h-52 rounded-md"
+                    src={blog?.imageUrl || blog.imgUrl}
+                    alt={blog?.title}
+                  />
+                  <div className="flex flex-col gap-1 pt-1">
+                    <span className="text-textWhite w-fit bg-textBlue px-2 py-2 rounded-md">
+                      {blog?.category}
+                    </span>
+                    <div className="flex gap-2 items-center">
+                      <p className="font-semibold text-[18px]">
+                        {blog?.author}
+                      </p>
+                      <p className="text-[15px]"></p>
+                    </div>
+                    <Link
+                      to={`/blog/blogSection/${blog.id}`}
+                      className="text-xl font-semibold underline w-fit"
+                    >
+                      {blog?.title}
+                    </Link>
+                    <span>{Excerpts(blog?.description, 120)}</span>
+                    <div className="flex items-center gap-2 justify-between w-full">
+                      <img
+                        className="w-6 cursor-pointer"
+                        src="/Images/pencil.svg"
+                        alt="update Icon"
+                        onClick={() => {
+                          navigate(`/blog/updateBlog/${blog?.id}`);
+                        }}
+                      />
+                      <img
+                        className="w-6 cursor-pointer"
+                        src="/Images/delete-2.svg"
+                        alt="Delete Icon"
+                        onClick={() => {
+                          handleDelete(blog?.id);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>

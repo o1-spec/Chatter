@@ -174,6 +174,30 @@ function ForYou() {
     setBookmark(true);
   };
 
+  const handleBlogClick = async (blogId: string) => {
+    try {
+      const blogRef = doc(db, "blogs", blogId);
+      const blogSnapshot = await getDoc(blogRef);
+      const blogData = blogSnapshot.data();
+
+      const updatedViews = (blogData?.views || 0) + 1;
+
+      await updateDoc(blogRef, { views: updatedViews });
+
+      setTotalBlogs((prevBlogs) => {
+        return prevBlogs.map((blog) => {
+          if (blog.id === blogId) {
+            return { ...blog, views: updatedViews };
+          } else {
+            return blog;
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error updating views:", error);
+    }
+  };
+
   const handleLike = async (blogId: string) => {
     const userId: string | undefined = auth.currentUser?.uid;
     const blogRef = doc(db, "blogs", blogId);
@@ -186,7 +210,9 @@ function ForYou() {
 
       if (currentLikes.includes(userId)) {
         // Unlike the post
-        updatedLikes = currentLikes.filter((id: string | undefined) => id !== userId);
+        updatedLikes = currentLikes.filter(
+          (id: string | undefined) => id !== userId
+        );
         localStorage.setItem(`liked_${blogId}`, "false"); // Update local storage
       } else {
         // Like the post
@@ -255,6 +281,7 @@ function ForYou() {
                   </div>
                   <Link
                     to={`/blog/blogSection/${blog.id}`}
+                    onClick={() => handleBlogClick(blog.id)}
                     className="sm:text-2xl text-xl font-semibold underline"
                   >
                     {blog.title}
@@ -262,7 +289,11 @@ function ForYou() {
                   <p className="text-[15px] md:text-[16px] pr-6">
                     {Excerpts(blog?.description, 250)}
                   </p>
-                  <img className="w-fit" src={blog.imageUrl} alt={blog.title} />
+                  <img
+                    className="w-fit"
+                    src={blog.imageUrl || blog.imgUrl}
+                    alt={blog.title}
+                  />
                 </div>
                 <div className="flex items-center justify-between pt-4 pb-4">
                   <div className={`flex items-center gap-2`}>
@@ -286,7 +317,6 @@ function ForYou() {
                           : "fa-regular fa-bookmark cursor-pointer"
                       }
                     ></i>
-
                   </div>
                   <div className="flex items-center gap-2">
                     <img src="/Images/analytics.svg" className="w-3" alt="" />

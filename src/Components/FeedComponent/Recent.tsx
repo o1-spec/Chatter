@@ -245,7 +245,7 @@ function Recent() {
                 <div className="flex items-center justify-between sm:justify-normal gap-3">
                   <img
                     className="w-20 h-[82px] rounded-full object-cover"
-                    src={blog.icon}
+                    src={blog.icon || "/Images/user.png"}
                     alt={blog.title}
                   />
                   <div>
@@ -271,7 +271,11 @@ function Recent() {
                 <p className="text-[15px] md:text-[16px] pr-6">
                   {Excerpts(blog?.description, 250)}
                 </p>
-                <img className="w-fit" src={blog.imageUrl} alt={blog.title} />
+                <img
+                  className="w-fit"
+                  src={blog.imageUrl || blog.imgUrl}
+                  alt={blog.title}
+                />
               </div>
               <div className="flex items-center justify-between pt-4 pb-4">
                 <div className="flex items-center gap-2">
@@ -299,11 +303,10 @@ function Recent() {
                         : "fa-regular fa-bookmark cursor-pointer"
                     }
                   ></i>
-                 
                 </div>
                 <div className="flex items-center gap-2">
                   <img src="/Images/analytics.svg" className="w-3" alt="" />
-                  <span className="text-sm">{blog.views}</span>
+                  <span className="text-sm">{blog.views || blog.view.length}</span>
                 </div>
               </div>
             </div>
