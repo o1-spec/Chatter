@@ -3,7 +3,7 @@ import { auth } from "../../../firebase";
 import {
   User,
   updateEmail,
-  updatePhoneNumber,
+  //updatePhoneNumber,
   updateProfile,
 } from "firebase/auth";
 import { toast } from "react-toastify";
@@ -24,74 +24,82 @@ function Account({ PostContext }: AccountProps) {
   const currentUser: User | null = auth.currentUser;
   const [update, setUpdate] = useState(true);
   const [newEmail, setNewEmail] = useState("");
-  const [newNumber, setNewNumber] = useState("");
+  //const [newNumber, setNewNumber] = useState("");
   const [newDisplayName, setNewDisplayName] = useState("");
   const [newPhotoURL, setNewPhotoURL] = useState("");
 
   const handlePicture = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
     const imageUrl = URL.createObjectURL(file);
     setNewPhotoURL(imageUrl);
   };
-
-  const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewNumber(e.target.value);
-  };
+  /*
+  //const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //setNewNumber(e.target.value);
+ // };
 
   const handlePhoneNumberUpdate = () => {
-    updatePhoneNumber(currentUser, newNumber)
-      .then(() => {
-        console.log("Phone number updated successfully");
-      })
-      .catch((error) => {
-        console.error("Error updating phone number:", error);
-        // Handle error: show error message or retry
-      });
-  };
+    if (currentUser) {
+      updatePhoneNumber(currentUser, newNumber)
+        .then(() => {
+          console.log("Phone number updated successfully");
+        })
+        .catch((error) => {
+          console.error("Error updating phone number:", error);
+          // Handle error: show error message or retry
+        });
+    } else {
+      return;
+    }
+  };*/
 
   const handleUpdateChange = () => {
-    if (newEmail !== "") {
-      updateEmail(currentUser, newEmail)
-        .then(() => {
-          console.log("Email updated successfully");
-        })
-        .catch((error) => {
-          console.error("Error updating email:", error);
-        });
+    if (currentUser) {
+      if (newEmail !== "") {
+        updateEmail(currentUser, newEmail)
+          .then(() => {
+            console.log("Email updated successfully");
+          })
+          .catch((error) => {
+            console.error("Error updating email:", error);
+          });
+      }
+
+      if (newDisplayName !== "" || newPhotoURL !== "") {
+        const updatedProfile: updatedProfile = {};
+        if (newDisplayName !== "") updatedProfile.displayName = newDisplayName;
+        if (newPhotoURL !== "") updatedProfile.photoURL = newPhotoURL;
+        //if (newNumber !== "") updatedProfile.phoneNumber = newNumber;
+
+        updateProfile(currentUser, updatedProfile)
+          .then(() => {
+            console.log("Profile updated successfully");
+          })
+          .catch((error) => {
+            console.error("Error updating profile:", error);
+          });
+        toast.success(
+          "Profile Updated Successfully reload page if it doesnt display",
+          {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            style: {
+              fontSize: "1rem",
+            },
+          }
+        );
+      }
+      setUpdate(false);
+    } else {
+      return;
     }
-
-    if (newDisplayName !== "" || newPhotoURL !== "" || newNumber !== "") {
-      const updatedProfile: updatedProfile = {};
-      if (newDisplayName !== "") updatedProfile.displayName = newDisplayName;
-      if (newPhotoURL !== "") updatedProfile.photoURL = newPhotoURL;
-      if (newNumber !== "") updatedProfile.phoneNumber = newNumber;
-
-      updateProfile(currentUser, updatedProfile)
-        .then(() => {
-          console.log("Profile updated successfully");
-        })
-        .catch((error) => {
-          console.error("Error updating profile:", error);
-        });
-      toast.success(
-        "Profile Updated Successfully reload page if it doesnt display",
-        {
-          position: "bottom-left",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          style: {
-            fontSize: "1rem",
-          },
-        }
-      );
-    }
-
-    setUpdate(false);
   };
 
   //console.log(user);
@@ -107,7 +115,9 @@ function Account({ PostContext }: AccountProps) {
             <div className="flex flex-col gap-2">
               <span className="font-semibold text-[19px]">Firstname:</span>
               {update ? (
-                <p className="text-[16px]">{user?.displayName.split(" ")[0]}</p>
+                <p className="text-[16px]">
+                  {user?.displayName?.split(" ")[0]}
+                </p>
               ) : (
                 <input
                   type="text"
@@ -121,7 +131,9 @@ function Account({ PostContext }: AccountProps) {
             <div className="flex flex-col gap-2">
               <span className="font-semibold text-[19px]">Lastname</span>
               {update ? (
-                <p className="text-[16px]">{user?.displayName.split(" ")[1]}</p>
+                <p className="text-[16px]">
+                  {user?.displayName?.split(" ")[1]}
+                </p>
               ) : (
                 <input
                   type="text"
@@ -146,6 +158,7 @@ function Account({ PostContext }: AccountProps) {
                 />
               )}
             </div>
+            {/*
             <div className="flex flex-col gap-2">
               <span className="font-semibold text-[19px]">Phone Number</span>
               {update ? (
@@ -159,7 +172,7 @@ function Account({ PostContext }: AccountProps) {
                   className=" border-[1.35px] border-textBlue focus:outline-none w-[75%] px-1 py-1 rounded-md"
                 />
               )}
-            </div>
+              </div>*/}
           </div>
           <div className="md:w-[220px] flex flex-col items-center w-full justify-center md:justify-start md:-translate-y-16">
             <img
@@ -190,7 +203,7 @@ function Account({ PostContext }: AccountProps) {
               <button
                 onClick={() => {
                   handleUpdateChange();
-                  handlePhoneNumberUpdate();
+                  //handlePhoneNumberUpdate();
                 }}
                 className="cursor-pointer text-textBlue mt-4 text-[15px] border bg-textWhite px-4 py-1 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
               >

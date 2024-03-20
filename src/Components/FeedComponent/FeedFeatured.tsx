@@ -69,24 +69,6 @@ function FeedFeatured() {
     console.log("yes");
   }
 
-  const convertSecondsToDate = (seconds: number) => {
-    // Convert seconds to milliseconds
-    const milliseconds = seconds * 1000;
-
-    const date = new Date(milliseconds);
-
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-
-    return formattedDate;
-  };
-
   const handleBookmark = (blogId: string) => {
     const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
 
@@ -147,7 +129,7 @@ function FeedFeatured() {
         );
         await updateDoc(blogRef, { likes: updatedLikes });
 
-        setTotalBlogs((prevBlogs) => {
+        setTotalBlogs((prevBlogs: TrendingInterface[]) => {
           return prevBlogs.map((blog) => {
             if (blog.id === blogId) {
               return { ...blog, likes: updatedLikes };
@@ -260,7 +242,13 @@ function FeedFeatured() {
                         {blog.category}
                       </span>
                       <span className="text-sm">
-                        {convertSecondsToDate(blog.createdAt)}
+                      {blog?.createdAt
+                              ?.toDate()
+                              .toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
                       </span>
                     </p>
                   </div>
@@ -309,7 +297,9 @@ function FeedFeatured() {
                 </div>
                 <div className="flex items-center gap-2">
                   <img src="/Images/analytics.svg" className="w-3" alt="" />
-                  <span className="text-sm">{blog.views || blog.view.length}</span>
+                  <span className="text-sm">
+                    {blog.views || blog.view.length}
+                  </span>
                 </div>
               </div>
             </div>

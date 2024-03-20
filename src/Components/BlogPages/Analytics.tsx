@@ -221,9 +221,19 @@ function Analytics() {
   }, [totalBlogs]);
 
   console.log(highestViews);
+  /*
+  const milliseconds = highestViews?.createdAt * 1000;
 
+  const date = new Date(milliseconds);
+
+  const formattedNewDate = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });*/
+
+  //Geeting current month
   const currentDate = new Date();
-
   const monthNames = [
     "January",
     "February",
@@ -238,17 +248,12 @@ function Analytics() {
     "November",
     "December",
   ];
-
   const monthIndex = currentDate.getMonth();
   const year = currentDate.getFullYear();
-
   const formattedDate = monthNames[monthIndex] + " " + year;
-
   const formattedString = highestViews?.description;
   const wordsArray = formattedString?.split(/\s+/);
-
   const slicedArray = wordsArray?.slice(0, 50);
-
   const shortenedString = slicedArray?.join(" ");
   if (loading) {
     return (
@@ -301,7 +306,13 @@ function Analytics() {
                       {highestViews?.author}
                     </span>
                     <span className="text-[14px]">
-                      {highestViews?.createdAt?.seconds}
+                      {highestViews?.createdAt
+                        ?.toDate()
+                        .toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                     </span>
                   </div>
                 </div>

@@ -111,6 +111,7 @@ function ForYou() {
     }
   };*/
 
+  /*
   const convertSecondsToDate = (seconds: number) => {
     // Convert seconds to milliseconds
     const milliseconds = seconds * 1000;
@@ -128,7 +129,7 @@ function ForYou() {
 
     return formattedDate;
   };
-
+*/
   const handleBookmark = (blogId: string) => {
     const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
 
@@ -206,7 +207,7 @@ function ForYou() {
       const blogData = blogSnapshot.data();
       const currentLikes = blogData?.likes || [];
 
-      let updatedLikes: [];
+      let updatedLikes: string[];
 
       if (currentLikes.includes(userId)) {
         // Unlike the post
@@ -274,7 +275,13 @@ function ForYou() {
                           {blog.category}
                         </span>
                         <span className="text-sm">
-                          {convertSecondsToDate(blog.createdAt)}
+                          {blog?.createdAt
+                            ?.toDate()
+                            .toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
                         </span>
                       </p>
                     </div>

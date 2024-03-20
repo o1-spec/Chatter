@@ -8,7 +8,7 @@ interface LoginPage {
 }
 
 function LoginPage({ PostContext }: LoginPage) {
-  const { logIn, setLogin, setUser, setActive } = useContext(PostContext);
+  const { logIn, setLogin, setUser } = useContext(PostContext);
 
   return (
     <div className="font-dmSans overflow-x-hidden">
@@ -65,11 +65,7 @@ function LoginPage({ PostContext }: LoginPage) {
                 <h4 className="text-3xl text-center pb-8 font-semibold">
                   Register as a Writer/Reader
                 </h4>
-                <SignupForm
-                  setLogin={setLogin}
-                  setActive={setActive}
-                  setUser={setUser}
-                />
+                <SignupForm setLogin={setLogin} setUser={setUser} />
               </div>
             )}
           </div>

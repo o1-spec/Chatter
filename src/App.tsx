@@ -46,7 +46,21 @@ export interface PostContextValue {
   setLogin: (logIn: boolean) => void;
 }
 
-const PostContext = createContext<PostContextValue>(null);
+const initialPostContextValue: PostContextValue = {
+  handleLogout: () => {},
+  setActive: (_active: string) => {},
+  setUser: (_user: User) => {},
+  user: null,
+  active: "",
+  logout: false,
+  overlay: false,
+  setOverlay: (_overlay: boolean) => {},
+  setLogOut: (_logOut: boolean) => {},
+  logIn: false,
+  setLogin: (_logIn: boolean) => {},
+};
+
+const PostContext = createContext<PostContextValue>(initialPostContextValue);
 
 function App() {
   const [active, setActive] = React.useState<string>("home");

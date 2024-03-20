@@ -9,32 +9,39 @@ import {
   getDoc,
   serverTimestamp,
 } from "firebase/firestore";
+import { Comment } from "./CommentInterface";
 import { db } from "../../firebase";
 import Spinner from "../utilities/Spinner";
 import Comments from "../utilities/Comments";
-import { JSX } from "react/jsx-runtime";
 import CommentBox from "../utilities/CommentBox";
 import { toast } from "react-toastify";
+import { PostContextValue } from "../../App";
+import { TrendingInterface } from "./Trending/TrendingInterface";
 
-function BlogSection({ PostContext }) {
+interface BlogSectionProp {
+  PostContext: React.Context<PostContextValue>;
+}
+
+function BlogSection({ PostContext }: BlogSectionProp) {
   const { user } = useContext(PostContext);
   const { id } = useParams();
   //console.log(user)
   const userId = user?.uid;
   const [loading, setLoading] = useState(true);
-  const [blogs, setBlogs] = useState([]);
-  const [comments, setComments] = useState([]);
+  const [blogs, setBlogs] = useState<TrendingInterface[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [userComment, setUserComment] = useState("");
-  const [selectedBlog, setSelectedBlog] = useState(null);
-  
+  const [selectedBlog, setSelectedBlog] = useState<TrendingInterface | null>(
+    null
+  );
 
-  useEffect(() => {
+  /*useEffect(() => {
     const unsub = onSnapshot(
       collection(db, "blogs"),
       (snapshot) => {
-        let list = [];
+        let list: TrendingInterface[] = [];
         snapshot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
+          list.push({ id: doc.id, ...doc.data() } as TrendingInterface);
         });
 
         setBlogs(list);
@@ -49,12 +56,49 @@ function BlogSection({ PostContext }) {
       unsub();
     };
   }, []);
+*/
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        setLoading(true);
+        const unsub = onSnapshot(
+          collection(db, "blogs"),
+          (snapshot) => {
+            const list: TrendingInterface[] = [];
+            snapshot.docs.forEach((doc) => {
+              list.push({ id: doc.id, ...doc.data() } as TrendingInterface);
+            });
+            setBlogs(list);
+            setLoading(false);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+
+        return () => {
+          unsub();
+        };
+      } catch (err) {
+        if (err instanceof Error) {
+          // e is narrowed to Error!
+          console.log(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlog();
+  }, []);
 
   console.log(blogs);
   useEffect(() => {
     if (blogs.length > 0) {
-      const foundBlog = blogs.find((blog) => blog.id === id);
-      setSelectedBlog(foundBlog);
+      const foundBlog: TrendingInterface | undefined = blogs.find(
+        (blog) => blog.id === id
+      );
+      setSelectedBlog(foundBlog!);
     }
   }, [blogs, id]);
 
@@ -63,33 +107,47 @@ function BlogSection({ PostContext }) {
   }, [id]);
 
   const getBlogDetail = async () => {
-    const docRef = doc(db, "blogs", id);
-    const blogDetail = await getDoc(docRef);
-    const snapshot = await getDoc(docRef);
-    setComments(snapshot.data().comments ? snapshot.data().comments : []);
+    try {
+      if (!id) {
+        return;
+      }
+      const docRef = doc(db, "blogs", id);
+      const snapshot = await getDoc(docRef);
+      if (snapshot.exists()) {
+        const blogData = snapshot.data();
+        setComments(blogData?.comments || []);
+      } else {
+        console.log("Document does not exist!");
+      }
+    } catch (error) {
+      console.error("Error getting document:", error);
+    }
   };
 
   console.log(selectedBlog);
 
-  const handleComment = async (e) => {
+  const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    comments.push({
+    if (!selectedBlog) return;
+    const newComment: Comment = {
       createdAt: Timestamp.fromDate(new Date()),
       userId,
       name: user?.displayName,
       body: userComment,
-    });
-
+    };
+    const updatedComments: Comment[] = [...comments, newComment];
     toast.success("Comment Posted Successfully", {});
-    await updateDoc(doc(db, "blogs", id), {
-      ...selectedBlog,
-      comments,
-      timestamp: serverTimestamp(),
-    });
-    setComments(comments);
+    if (id) {
+      await updateDoc(doc(db, "blogs", id), {
+        comments: updatedComments,
+        timestamp: serverTimestamp(),
+      });
+    } else {
+      console.error("Error: Document ID is undefined");
+    }
+    setComments(updatedComments);
     setUserComment("");
   };
-
 
   console.log(selectedBlog);
   if (loading) {
@@ -116,11 +174,12 @@ function BlogSection({ PostContext }) {
             <p className="font-semibold text-xl">
               Written By : &nbsp;{selectedBlog?.author}
             </p>
+            {/*
             {selectedBlog?.timestamp ? (
-              <span>{selectedBlog?.timestamp.toDate().toDateString()}</span>
+              <span>{selectedBlog?.timestamp?.toDateString()}</span>
             ) : (
-              <span>{selectedBlog?.createdAt.toDate().toDateString()}</span>
-            )}
+              <span>{selectedBlog?.createdAt?.toDateString()}</span>
+            )}*/}
           </div>
           <div className="text-[17px] pr-4">
             {selectedBlog?.description &&
@@ -144,11 +203,9 @@ function BlogSection({ PostContext }) {
               <p>No comments yet on this blog, Be the first to comment</p>
             ) : (
               <>
-                {selectedBlog?.comments.map(
-                  (comment: JSX.IntrinsicAttributes) => (
-                    <Comments comment={comment} user={user} />
-                  )
-                )}
+                {selectedBlog?.comments?.map((comment) => (
+                  <Comments comment={comment} />
+                ))}
               </>
             )}
           </div>

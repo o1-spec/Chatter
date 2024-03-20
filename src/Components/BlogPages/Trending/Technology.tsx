@@ -72,24 +72,6 @@ function Technology() {
 
   //console.log(totalBlogs);
 
-  const convertSecondsToDate = (seconds: number) => {
-    // Convert seconds to milliseconds
-    const milliseconds = seconds * 1000;
-
-    const date = new Date(milliseconds);
-
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-
-    return formattedDate;
-  };
-
   const techBlog: TrendingInterface[] = [];
   totalBlogs.map((blog) => {
     if (blog.category === "Technology") {
@@ -297,7 +279,13 @@ function Technology() {
                         <p className="flex flex-col gap-1 sm:gap-2">
                           <span className="text-[16px]">{blog.category}</span>
                           <span className="text-sm">
-                            {convertSecondsToDate(blog.createdAt)}
+                          {blog?.createdAt
+                              ?.toDate()
+                              .toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
                           </span>
                         </p>
                       </div>

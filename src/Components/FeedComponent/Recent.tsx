@@ -69,23 +69,6 @@ function Recent() {
     console.log("yes");
   }
 
-  const convertSecondsToDate = (seconds: number) => {
-    // Convert seconds to milliseconds
-    const milliseconds = seconds * 1000;
-
-    const date = new Date(milliseconds);
-
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-
-    return formattedDate;
-  };
 
   const handleBookmark = (blogId: string) => {
     const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
@@ -257,7 +240,13 @@ function Recent() {
                         {blog.category}
                       </span>
                       <span className="text-sm">
-                        {convertSecondsToDate(blog.createdAt)}
+                      {blog?.createdAt
+                              ?.toDate()
+                              .toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
                       </span>
                     </p>
                   </div>

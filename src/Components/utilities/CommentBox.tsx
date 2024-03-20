@@ -1,12 +1,32 @@
+import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-function CommentBox({ userComment, setUserComment, handleComment, userId }) {
+interface CommentInterface {
+  userId: string | undefined;
+  handleComment: (e: React.FormEvent<HTMLFormElement>) => void;
+  userComment: string;
+  setUserComment: (Comment: string) => void;
+}
+
+function CommentBox({
+  userComment,
+  setUserComment,
+  handleComment,
+  userId,
+}: CommentInterface) {
   const navigate = useNavigate();
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleComment(e);
+  };
+
+  const rows: number = 4;
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <textarea
-          rows="4"
+          rows={rows}
           value={userComment}
           className="focus:outline-textBlue border-1 border-textBlack w-[60vw]"
           onChange={(e) => setUserComment(e.target.value)}
@@ -22,7 +42,6 @@ function CommentBox({ userComment, setUserComment, handleComment, userId }) {
           <button
             type="submit"
             className="text-textWhite text-[15px] text-center border bg-textBlue px-6 py-2 rounded-lg h-fit w-40 transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
-            onClick={handleComment}
           >
             Post Comment
           </button>

@@ -21,7 +21,7 @@ const initialState = {
   description: "",
   comments: [],
   likes: [],
-  view: []
+  view: [],
 };
 
 const categoryOption = [
@@ -32,44 +32,34 @@ const categoryOption = [
   "Politics",
 ];
 
-interface BlogData {
-  title: string;
-  category: string;
-  description: string;
-}
-
 interface PostBlogProps {
   PostContext: React.Context<PostContextValue>;
 }
 
-type File = Blob | null;
-
 type ImageUrl = string | null;
-
-type Comment = any[];
 
 type Progress = number | null;
 
 function PostBlog({ PostContext }: PostBlogProps) {
   const { user } = useContext(PostContext);
   const [plus, setPlus] = useState(true);
-  const [minus, setMinus] = useState(false);
-  const [picture, setPicture] = useState(false);
+  const [, setMinus] = useState(false);
+  const [, setPicture] = useState(false);
   const [imageUrl, setImageUrl] = useState<ImageUrl>(null);
   const [form, setForm] = useState(initialState);
   const [isDirty, setIsDirty] = useState(false);
-  const [file, setFile] = useState<File>(null);
+  const [file, setFile] = useState<File | null>(null);
   const navigate = useNavigate();
   const [exitBox, setExitBox] = useState(false);
-  const [comments, setComments] = useState([]);
+  const [, setComments] = useState([]);
   const [progress, setProgress] = useState<Progress>(null);
-  let [likes, setLikes] = useState([]);
   const { id } = useParams();
 
-  const { title, category, description, view } = form;
+  const { title, category, description } = form;
 
   useEffect(() => {
     const uploadFile = () => {
+      if (!file) return;
       const storageRef = ref(storage, file?.name);
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
@@ -123,14 +113,21 @@ function PostBlog({ PostContext }: PostBlogProps) {
   }, [id]);
 
   const getBlogDetail = async () => {
-    const docRef = doc(db, "blogs", id);
-    const blogDetail = await getDoc(docRef);
-    const snapshot = await getDoc(docRef);
-    if (snapshot.exists()) {
-      setForm({ ...snapshot.data() });
+    try {
+      if (!id) {
+        return;
+      }
+      const docRef = doc(db, "blogs", id);
+      const snapshot = await getDoc(docRef);
+      if (snapshot.exists()) {
+        const blogData = snapshot.data();
+        setComments(blogData?.comments || []);
+      } else {
+        console.log("Document does not exist!");
+      }
+    } catch (error) {
+      console.error("Error getting document:", error);
     }
-    setComments(snapshot.data().comments ? snapshot.data().comments : []);
-    setLikes(blogDetail.data().likes ? blogDetail.data().likes : []);
   };
 
   const handlePlus = () => {
@@ -138,9 +135,9 @@ function PostBlog({ PostContext }: PostBlogProps) {
     setPlus(false);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target?.files?.[0];
+    if (!file) return;
     const imageUrl: string = URL.createObjectURL(file);
     setImageUrl(imageUrl);
     setPicture(false);
@@ -159,11 +156,13 @@ function PostBlog({ PostContext }: PostBlogProps) {
     setPicture(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const onCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setForm({ ...form, category: e.target.value });
   };
 
@@ -175,8 +174,8 @@ function PostBlog({ PostContext }: PostBlogProps) {
           await addDoc(collection(db, "blogs"), {
             ...form,
             createdAt: serverTimestamp(),
-            author: user.displayName,
-            userId: user.uid,
+            author: user?.displayName,
+            userId: user?.uid,
           });
           toast.success("Blog created successfully", {
             position: "bottom-left",
@@ -192,27 +191,29 @@ function PostBlog({ PostContext }: PostBlogProps) {
             },
           });
         } catch (err) {
-          toast.error(err.message, {
-            position: "bottom-left",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            style: {
-              fontSize: "1rem",
-            },
-          });
+          if (err instanceof Error) {
+            toast.error(err.message, {
+              position: "bottom-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              style: {
+                fontSize: "1rem",
+              },
+            });
+          }
         }
       } else {
         try {
           await updateDoc(doc(db, "blogs", id), {
             ...form,
             timestamp: serverTimestamp(),
-            author: user.displayName,
-            userId: user.uid,
+            author: user?.displayName,
+            userId: user?.uid,
           });
           toast.success("Blog updated successfully");
         } catch (err) {
@@ -226,7 +227,10 @@ function PostBlog({ PostContext }: PostBlogProps) {
   };
 
   useEffect(() => {
-    const handleBeforeUnload = (event) => {
+    const handleBeforeUnload = (event: {
+      preventDefault: () => void;
+      returnValue: string;
+    }) => {
       if (isDirty) {
         event.preventDefault();
         event.returnValue = "";
@@ -290,9 +294,12 @@ function PostBlog({ PostContext }: PostBlogProps) {
                       style={{ display: "none" }}
                       onChange={(e) => {
                         handleImageChange(e);
-                        setFile(e.target.files[0]);
-                        setMinus(false);
-                        setPlus(false);
+                        const selectedFile = e.target?.files?.[0];
+                        if (selectedFile) {
+                          setFile(selectedFile);
+                          setMinus(false);
+                          setPlus(false);
+                        }
                       }}
                     />
                   </label>
