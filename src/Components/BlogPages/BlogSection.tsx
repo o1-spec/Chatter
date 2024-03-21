@@ -92,7 +92,7 @@ function BlogSection({ PostContext }: BlogSectionProp) {
     fetchBlog();
   }, []);
 
-  console.log(blogs);
+  //console.log(blogs);
   useEffect(() => {
     if (blogs.length > 0) {
       const foundBlog: TrendingInterface | undefined = blogs.find(
@@ -124,7 +124,7 @@ function BlogSection({ PostContext }: BlogSectionProp) {
     }
   };
 
-  console.log(selectedBlog);
+  //console.log(selectedBlog);
 
   const handleComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -136,7 +136,19 @@ function BlogSection({ PostContext }: BlogSectionProp) {
       body: userComment,
     };
     const updatedComments: Comment[] = [...comments, newComment];
-    toast.success("Comment Posted Successfully", {});
+    toast.success("Comment Posted Successfully", {
+      position: "bottom-left",
+      autoClose: 500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      style: {
+        fontSize: "1rem",
+      },
+    });
     if (id) {
       await updateDoc(doc(db, "blogs", id), {
         comments: updatedComments,
@@ -203,8 +215,8 @@ function BlogSection({ PostContext }: BlogSectionProp) {
               <p>No comments yet on this blog, Be the first to comment</p>
             ) : (
               <>
-                {selectedBlog?.comments?.map((comment) => (
-                  <Comments comment={comment} />
+                {selectedBlog?.comments?.map((comment, index) => (
+                  <Comments comment={comment} index={index} />
                 ))}
               </>
             )}

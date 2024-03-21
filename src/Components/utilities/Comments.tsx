@@ -7,12 +7,13 @@ interface CommentProp {
     };
     name: string;
   };
+  index: number;
 }
 
-function Comments({ comment }: CommentProp) {
+function Comments({ comment, index }: CommentProp) {
   const { body, createdAt, name } = comment;
   return (
-    <div className="flex items-center gap-6 pb-4 pt-2">
+    <div className="flex items-center gap-6 pb-4 pt-2" key={index}>
       <img className="w-16 h-fit" src="/Images/user.png" alt="User Picture" />
       <div>
         <h6 className="font-semibold text-[17px]">{name}</h6>
