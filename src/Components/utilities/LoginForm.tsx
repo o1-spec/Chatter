@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { User } from "firebase/auth";
 import { toast } from "react-toastify";
+import Spinner from "./Spinner";
 const initialState = {
   email: "",
   password: "",
@@ -14,6 +15,7 @@ interface LoginFormProps {
   setLogin: (value: boolean) => void;
 }
 function LoginForm({ setUser, setLogin }: LoginFormProps) {
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
   const { email, password } = state;
@@ -30,7 +32,6 @@ function LoginForm({ setUser, setLogin }: LoginFormProps) {
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-
       if (email && password) {
         const { user } = await signInWithEmailAndPassword(
           auth,
@@ -39,6 +40,7 @@ function LoginForm({ setUser, setLogin }: LoginFormProps) {
         );
         navigate("/blog/feed");
         setUser(user);
+        setLoading(true);
         setLogin(true);
       } else {
         return toast.error("All fields are mandatory", {
@@ -76,6 +78,14 @@ function LoginForm({ setUser, setLogin }: LoginFormProps) {
       }
     }
   };
+
+  if (loading) {
+    return (
+      <div className="mt-40">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <>

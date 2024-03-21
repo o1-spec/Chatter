@@ -161,7 +161,7 @@ function BlogSection({ PostContext }: BlogSectionProp) {
     setUserComment("");
   };
 
-  console.log(selectedBlog);
+  //console.log(selectedBlog);
   if (loading) {
     return (
       <div>

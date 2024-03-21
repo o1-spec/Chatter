@@ -11,6 +11,7 @@ import {
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
 import { User } from "firebase/auth";
+import Spinner from "./Spinner";
 
 const initialState = {
   firstName: "",
@@ -26,6 +27,7 @@ interface SignFormProps {
 }
 
 function SignupForm({ setUser, setLogin }: SignFormProps) {
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [state, setState] = useState(initialState);
   const googleProvider = new GoogleAuthProvider();
@@ -49,6 +51,7 @@ function SignupForm({ setUser, setLogin }: SignFormProps) {
       const user = result.user;
       setUser(user);
       navigate("/blog/feed");
+      setLoading(false);
       toast.success("Sign Up with Google Complete", {
         position: "bottom-left",
         autoClose: 5000,
@@ -157,7 +160,7 @@ function SignupForm({ setUser, setLogin }: SignFormProps) {
       }
       navigate("/blog/feed");
       setLogin(true);
-    } catch (error : unknown) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         const notify = () => {
           toast.error(`${error}`, {
@@ -178,6 +181,14 @@ function SignupForm({ setUser, setLogin }: SignFormProps) {
       }
     }
   };
+
+  if (loading) {
+    return (
+      <div className="mt-40">
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <>
       <form className="flex flex-col gap-6 pb-16" onSubmit={handleAuth}>

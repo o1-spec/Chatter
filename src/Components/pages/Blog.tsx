@@ -68,7 +68,7 @@ function Blog({ PostContext }: LogoutProps) {
   //console.log(filteredBlog);
   if (loading) {
     return (
-      <div>
+      <div className="mt-40">
         <Spinner />
       </div>
     );
