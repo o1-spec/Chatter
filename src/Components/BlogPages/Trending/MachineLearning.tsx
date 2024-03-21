@@ -92,7 +92,7 @@ function MachineLearning() {
       updatedBookmarks = bookmarkedBlogs.filter((blog) => blog.id !== blogId);
       toast.error("One Content removed from Bookmarks", {
         position: "bottom-left",
-        autoClose: 5000,
+        autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -109,7 +109,7 @@ function MachineLearning() {
         updatedBookmarks = [...bookmarkedBlogs, blogToAdd];
         toast.success("One Content Bookmarked", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

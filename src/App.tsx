@@ -60,7 +60,7 @@ const initialPostContextValue: PostContextValue = {
   setLogin: (_logIn: boolean) => {},
 };
 
-const PostContext = createContext<PostContextValue>(initialPostContextValue);
+export const PostContext = createContext<PostContextValue>(initialPostContextValue);
 
 function App() {
   const [active, setActive] = React.useState<string>("home");

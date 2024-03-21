@@ -1,6 +1,7 @@
+import { User } from "@firebase/auth";
 import { Link } from "react-router-dom";
 
-function Creators() {
+function Creators({ user }: { user: User | null }) {
   return (
     <div className="py-20">
       <div className="flex flex-col max-w-[1100px] lg:flex-row mx-auto my-0 md:px-4 px-6 gap-16 items-center">
@@ -31,12 +32,16 @@ function Creators() {
             Share people your great ideas, and also read write-ups based on your
             interests. connect with people of same interests and goals
           </p>
-          <Link
-            to="/"
-            className="text-textWhite md:w-36 md:text-center md:text-lg w-32 text-[15px] bg-textBlue md:px-3 px-4 border md:py-2 py-3 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
-          >
-            Get started
-          </Link>
+          {!user ? (
+            <Link
+              to="/login"
+              className="text-textWhite text-center md:w-36 md:text-center md:text-lg w-32 text-[15px] bg-textBlue md:px-3 px-4 border md:py-2 py-3 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
+            >
+              Get started
+            </Link>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

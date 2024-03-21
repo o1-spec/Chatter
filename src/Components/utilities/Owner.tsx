@@ -1,6 +1,7 @@
+import { User } from "@firebase/auth";
 import { Link } from "react-router-dom";
 
-function Owner() {
+function Owner({ user }: { user: User | null }) {
   return (
     <div className="bg-bgCream py-16">
       <div className="lg:max-w-[1100px] my-0 mx-auto flex flex-col gap-8 items-center md:px-0 px-6 lg:flex-row">
@@ -15,14 +16,21 @@ function Owner() {
             their ideas and engaging in thoughtful discussions.”
           </p>
           <span className="text-lg font-semibold block pb-6">
-            Adebobola Muhydeen <span className="font font-normal text-[14px] md:text-[16px]">Software developer at Apple</span>
+            Adebobola Muhydeen{" "}
+            <span className="font font-normal text-[14px] md:text-[16px]">
+              Software developer at Apple
+            </span>
           </span>
-          <Link 
-            to="/"
-            className="text-textWhite text-[15px] bg-textBlue px-6 py-2 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
-          >
-            Join Chatter
-          </Link>
+          {!user ? (
+            <Link
+              to="/login"
+              className="text-textWhite text-[15px] bg-textBlue px-6 py-2 rounded-lg transition hover:bg-textWhite hover:text-textBlue border-textBlue duration-300"
+            >
+              Join Chatter
+            </Link>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

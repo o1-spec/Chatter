@@ -180,7 +180,7 @@ function Politics() {
 
         toast.info("You unliked the post!", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -209,7 +209,7 @@ function Politics() {
 
         toast.success("You liked the post!", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -225,7 +225,7 @@ function Politics() {
       console.error("Error updating likes:", error);
       toast.error("Failed to like the post. Please try again later.", {
         position: "bottom-left",
-        autoClose: 5000,
+        autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

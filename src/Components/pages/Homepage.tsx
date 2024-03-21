@@ -14,15 +14,15 @@ interface HomepageProp {
 
 function Homepage({ PostContext }: HomepageProp) {
   const { user, setLogin } = useContext(PostContext);
-  console.log(user);
+  //console.log(user);
   return (
     <div className="font-dmSans">
       <Nav user={user} setLogin={setLogin} />
       <Hero user={user} />
       <About />
       <Why />
-      <Owner />
-      <Creators />
+      <Owner user={user} />
+      <Creators user={user} />
       <Footer />
     </div>
   );

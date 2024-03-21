@@ -80,7 +80,7 @@ function FeedFeatured() {
       updatedBookmarks = bookmarkedBlogs.filter((blog) => blog.id !== blogId);
       toast.error("One Content removed from Bookmarks", {
         position: "bottom-left",
-        autoClose: 5000,
+        autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -97,7 +97,7 @@ function FeedFeatured() {
         updatedBookmarks = [...bookmarkedBlogs, blogToAdd];
         toast.success("One Content Bookmarked", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -144,7 +144,7 @@ function FeedFeatured() {
 
         toast.info("You unliked the post!", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -173,7 +173,7 @@ function FeedFeatured() {
         setLike(true);
         toast.success("You liked the post!", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -189,7 +189,7 @@ function FeedFeatured() {
       console.error("Error updating likes:", error);
       toast.error("Failed to like the post. Please try again later.", {
         position: "bottom-left",
-        autoClose: 5000,
+        autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -229,7 +229,7 @@ function FeedFeatured() {
           >
             <div className="w-fit md:w-[650px] my-0 mx-auto">
               <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between sm:justify-normal gap-3">
+                <div className="flex items-center sm:justify-normal gap-3">
                   <img
                     className="w-20 h-[82px] rounded-full object-cover"
                     src={

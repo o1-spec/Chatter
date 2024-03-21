@@ -61,30 +61,6 @@ function ForYou() {
     fetchBlog();
   }, []);
 
-  /*
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const imagePaths = await getImagePaths();
-        const urls = await Promise.all(
-          imagePaths.map(async (path) => {
-            const storageRef = ref(storage, path);
-            return await getDownloadURL(storageRef);
-          })
-        );
-
-        setImageUrl(urls);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching images:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchImages();
-  }, []);
-*/
-
   useEffect(() => {
     const storedBookmarkString = localStorage.getItem("bookmarkedBlogs");
     if (storedBookmarkString) {
@@ -101,38 +77,6 @@ function ForYou() {
   //console.log(bookmarkedBlogs);
   //console.log(totalBlogs);
 
-  /*
-  const getImagePaths = async () => {
-    try {
-      const imagesRef = ref(storage, "/Icon-img"); // Change this to your directory path
-      const imageList = await listAll(imagesRef);
-      const paths = imageList.items.map((item) => item.fullPath);
-      return paths;
-    } catch (error) {
-      console.error("Error fetching image paths:", error);
-      return [];
-    }
-  };*/
-
-  /*
-  const convertSecondsToDate = (seconds: number) => {
-    // Convert seconds to milliseconds
-    const milliseconds = seconds * 1000;
-
-    const date = new Date(milliseconds);
-
-    const formattedDate = date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-
-    return formattedDate;
-  };
-*/
   const handleBookmark = (blogId: string) => {
     const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
 
@@ -142,7 +86,7 @@ function ForYou() {
       updatedBookmarks = bookmarkedBlogs.filter((blog) => blog.id !== blogId);
       toast.error("One Content removed from Bookmarks", {
         position: "bottom-left",
-        autoClose: 5000,
+        autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -159,7 +103,7 @@ function ForYou() {
         updatedBookmarks = [...bookmarkedBlogs, blogToAdd];
         toast.success("One Content Bookmarked", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -263,7 +207,7 @@ function ForYou() {
             >
               <div className="w-fit md:w-[650px] my-0 mx-auto">
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between sm:justify-normal gap-3">
+                  <div className="flex items-center sm:justify-normal gap-3">
                     <img
                       className="w-20 h-[82px] rounded-full object-cover"
                       src={

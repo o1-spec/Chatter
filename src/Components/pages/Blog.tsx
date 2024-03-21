@@ -76,7 +76,7 @@ function Blog({ PostContext }: LogoutProps) {
   //console.log(totalBlogs);
 
   return (
-    <div className="font-dmSans w-full h-full">
+    <div className="font-dmSans w-full h-full" data-testid="blog-1">
       <div
         className={
           blogNav === false

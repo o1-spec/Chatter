@@ -227,10 +227,7 @@ function PostBlog({ PostContext }: PostBlogProps) {
   };
 
   useEffect(() => {
-    const handleBeforeUnload = (event: {
-      preventDefault: () => void;
-      returnValue: string;
-    }) => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (isDirty) {
         event.preventDefault();
         event.returnValue = "";
@@ -246,7 +243,6 @@ function PostBlog({ PostContext }: PostBlogProps) {
 
   const handleExitConfirmation = (confirmExit: boolean) => {
     if (confirmExit) {
-      // User confirmed to exit without saving
       setIsDirty(false);
       navigate("/blog/feed");
     } else {

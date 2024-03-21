@@ -183,7 +183,7 @@ function BlogSection({ PostContext }: BlogSectionProp) {
           </div>
           <div className="text-[17px] pr-4">
             {selectedBlog?.description &&
-              selectedBlog.description.split("\n").map((paragraph, index) => (
+              selectedBlog?.description.split("\n").map((paragraph, index) => (
                 <p key={index} className="pb-2">
                   {paragraph}
                 </p>

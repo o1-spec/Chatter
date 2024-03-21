@@ -91,7 +91,7 @@ function Programming() {
       updatedBookmarks = bookmarkedBlogs.filter((blog) => blog.id !== blogId);
       toast.error("One Content removed from Bookmarks", {
         position: "bottom-left",
-        autoClose: 5000,
+        autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -108,7 +108,7 @@ function Programming() {
         updatedBookmarks = [...bookmarkedBlogs, blogToAdd];
         toast.success("One Content Bookmarked", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -179,7 +179,7 @@ function Programming() {
         setLike(false);
         toast.info("You unliked the post!", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -208,7 +208,7 @@ function Programming() {
 
         toast.success("You liked the post!", {
           position: "bottom-left",
-          autoClose: 5000,
+          autoClose: 500,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -224,7 +224,7 @@ function Programming() {
       console.error("Error updating likes:", error);
       toast.error("Failed to like the post. Please try again later.", {
         position: "bottom-left",
-        autoClose: 5000,
+        autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
