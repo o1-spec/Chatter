@@ -99,7 +99,7 @@ function ForYou() {
   }
 
   //console.log(bookmarkedBlogs);
-  console.log(totalBlogs);
+  //console.log(totalBlogs);
 
   /*
   const getImagePaths = async () => {

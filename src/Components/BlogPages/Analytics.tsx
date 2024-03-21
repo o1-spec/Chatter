@@ -292,7 +292,7 @@ function Analytics() {
                 <p className="text-lg font-semibold">
                   Top Post with the highest views
                 </p>
-                <span>earned 2980 Impressions</span>
+                <span>earned {highestViews.views} Impressions</span>
               </div>
               <div className="max-w-[600px] flex flex-col gap-3 pt-4">
                 <div className="flex gap-3 items-center">

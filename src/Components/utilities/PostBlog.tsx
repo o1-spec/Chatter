@@ -254,7 +254,7 @@ function PostBlog({ PostContext }: PostBlogProps) {
     }
   };
 
-  console.log(form);
+  //console.log(form);
 
   return (
     <>
