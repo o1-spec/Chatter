@@ -13,8 +13,10 @@ import Spinner from "../../utilities/Spinner";
 import { toast } from "react-toastify";
 import { logBookmark } from "../AnalyticsFunctions";
 import { TrendingInterface } from "./TrendingInterface";
+import { User } from "firebase/auth";
 
 function Technology() {
+  const currentUser: User | null = auth.currentUser;
   const [loading, setLoading] = useState(true);
   const [like, setLike] = useState(false);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
@@ -269,7 +271,11 @@ function Technology() {
                     <div className="flex items-center gap-3 sm:justify-normal">
                       <img
                         className="w-20 h-[82px] rounded-full object-cover"
-                        src={blog.icon || "/Images/user.png"}
+                        src={
+                          currentUser?.uid === blog.userId
+                            ? currentUser?.photoURL ?? ""
+                            : blog.icon ?? "/Images/user.png"
+                        }
                         alt={blog.title}
                       />
                       <div>
@@ -279,7 +285,7 @@ function Technology() {
                         <p className="flex flex-col gap-1 sm:gap-2">
                           <span className="text-[16px]">{blog.category}</span>
                           <span className="text-sm">
-                          {blog?.createdAt
+                            {blog?.createdAt
                               ?.toDate()
                               .toLocaleDateString("en-US", {
                                 month: "short",

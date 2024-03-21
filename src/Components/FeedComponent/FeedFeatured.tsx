@@ -13,8 +13,10 @@ import { TrendingInterface } from "../BlogPages/Trending/TrendingInterface";
 import { Excerpts } from "../utilities/Excerpts";
 import { Link } from "react-router-dom";
 import { logBookmark } from "../BlogPages/AnalyticsFunctions";
+import { User } from "firebase/auth";
 
 function FeedFeatured() {
+  const currentUser: User | null = auth.currentUser;
   const [loading, setLoading] = useState(true);
   const [like, setLike] = useState(false);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
@@ -230,7 +232,11 @@ function FeedFeatured() {
                 <div className="flex items-center justify-between sm:justify-normal gap-3">
                   <img
                     className="w-20 h-[82px] rounded-full object-cover"
-                    src={blog.icon || "/Images/user.png"}
+                    src={
+                      currentUser?.uid === blog.userId
+                        ? currentUser?.photoURL ?? ""
+                        : blog.icon ?? "/Images/user.png"
+                    }
                     alt={blog.title}
                   />
                   <div>
@@ -242,13 +248,11 @@ function FeedFeatured() {
                         {blog.category}
                       </span>
                       <span className="text-sm">
-                      {blog?.createdAt
-                              ?.toDate()
-                              .toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              })}
+                        {blog?.createdAt?.toDate().toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </span>
                     </p>
                   </div>

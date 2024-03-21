@@ -13,8 +13,10 @@ import { TrendingInterface } from "../BlogPages/Trending/TrendingInterface";
 import { Excerpts } from "../utilities/Excerpts";
 import { Link } from "react-router-dom";
 import { logBookmark } from "../BlogPages/AnalyticsFunctions";
+import { User } from "firebase/auth";
 
 function Recent() {
+  const currentUser: User | null = auth.currentUser;
   const [loading, setLoading] = useState(true);
   const [like, setLike] = useState(false);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
@@ -68,7 +70,6 @@ function Recent() {
   if (bookmark) {
     console.log("yes");
   }
-
 
   const handleBookmark = (blogId: string) => {
     const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
@@ -228,7 +229,11 @@ function Recent() {
                 <div className="flex items-center justify-between sm:justify-normal gap-3">
                   <img
                     className="w-20 h-[82px] rounded-full object-cover"
-                    src={blog.icon || "/Images/user.png"}
+                    src={
+                      currentUser?.uid === blog.userId
+                        ? currentUser?.photoURL ?? ""
+                        : blog.icon ?? "/Images/user.png"
+                    }
                     alt={blog.title}
                   />
                   <div>
@@ -240,13 +245,11 @@ function Recent() {
                         {blog.category}
                       </span>
                       <span className="text-sm">
-                      {blog?.createdAt
-                              ?.toDate()
-                              .toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              })}
+                        {blog?.createdAt?.toDate().toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </span>
                     </p>
                   </div>
@@ -295,7 +298,9 @@ function Recent() {
                 </div>
                 <div className="flex items-center gap-2">
                   <img src="/Images/analytics.svg" className="w-3" alt="" />
-                  <span className="text-sm">{blog.views || blog.view.length}</span>
+                  <span className="text-sm">
+                    {blog.views || blog.view.length}
+                  </span>
                 </div>
               </div>
             </div>

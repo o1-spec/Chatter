@@ -13,8 +13,11 @@ import Spinner from "../utilities/Spinner";
 import { toast } from "react-toastify";
 import { TrendingInterface } from "../BlogPages/Trending/TrendingInterface";
 import { logBookmark } from "../BlogPages/AnalyticsFunctions";
+import { User } from "firebase/auth";
 
 function ForYou() {
+  const currentUser: User | null = auth.currentUser;
+  //console.log(currentUser);
   const [loading, setLoading] = useState(true);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
   //const [imageUrl, setImageUrl] = useState([]);
@@ -96,7 +99,7 @@ function ForYou() {
   }
 
   //console.log(bookmarkedBlogs);
-  //console.log(totalBlogs);
+  console.log(totalBlogs);
 
   /*
   const getImagePaths = async () => {
@@ -263,7 +266,11 @@ function ForYou() {
                   <div className="flex items-center justify-between sm:justify-normal gap-3">
                     <img
                       className="w-20 h-[82px] rounded-full object-cover"
-                      src={blog.icon}
+                      src={
+                        currentUser?.uid === blog.userId
+                          ? currentUser?.photoURL ?? ""
+                          : blog.icon ?? "/Images/user.png"
+                      }
                       alt={blog.title}
                     />
                     <div>

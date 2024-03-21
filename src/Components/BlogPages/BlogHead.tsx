@@ -51,7 +51,7 @@ function BlogHead({ user, setBlogNav, handleSearch, setSearchOpen }: BlogHead) {
           <div className="flex items-center gap-2">
             <img
               src={user.photoURL === null ? "/Images/user.png" : user.photoURL}
-              className="w-12 h-10 rounded-full object-cover"
+              className="sm:w-10 w-12 sm:h-10 h-12 rounded-full object-cover"
               alt=""
             />
             <span className="text-sm font-semibold md:block hidden">

@@ -6,6 +6,7 @@ import {
   //updatePhoneNumber,
   updateProfile,
 } from "firebase/auth";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { toast } from "react-toastify";
 import { PostContextValue } from "../../../App";
 
@@ -31,31 +32,33 @@ function Account({ PostContext }: AccountProps) {
   const handlePicture = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const imageUrl = URL.createObjectURL(file);
-    setNewPhotoURL(imageUrl);
+
+    // Upload file to Firebase Storage
+    const storage = getStorage();
+    const storageRef = ref(storage, file.name);
+    uploadBytes(storageRef, file).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((downloadURL) => {
+        setNewPhotoURL(downloadURL);
+      });
+    });
   };
-  /*
-  //const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //setNewNumber(e.target.value);
- // };
 
-  const handlePhoneNumberUpdate = () => {
-    if (currentUser) {
-      updatePhoneNumber(currentUser, newNumber)
-        .then(() => {
-          console.log("Phone number updated successfully");
-        })
-        .catch((error) => {
-          console.error("Error updating phone number:", error);
-          // Handle error: show error message or retry
-        });
-    } else {
-      return;
-    }
-  };*/
-
+  console.log(user);
   const handleUpdateChange = () => {
     if (currentUser) {
+      if (newPhotoURL !== "") {
+        const updatedProfile: updatedProfile = {
+          photoURL: newPhotoURL,
+        };
+        updateProfile(currentUser, updatedProfile)
+          .then(() => {
+            console.log("Profile updated successfully");
+          })
+          .catch((error) => {
+            console.error("Error updating profile:", error);
+            setNewPhotoURL("");
+          });
+      }
       if (newEmail !== "") {
         updateEmail(currentUser, newEmail)
           .then(() => {
@@ -78,6 +81,7 @@ function Account({ PostContext }: AccountProps) {
           })
           .catch((error) => {
             console.error("Error updating profile:", error);
+            setNewPhotoURL("");
           });
         toast.success(
           "Profile Updated Successfully reload page if it doesnt display",
@@ -158,21 +162,6 @@ function Account({ PostContext }: AccountProps) {
                 />
               )}
             </div>
-            {/*
-            <div className="flex flex-col gap-2">
-              <span className="font-semibold text-[19px]">Phone Number</span>
-              {update ? (
-                <p className="text-[16px]">{user?.phoneNumber}</p>
-              ) : (
-                <input
-                  type="tel"
-                  value={newNumber}
-                  onChange={handlePhoneNumber}
-                  name="phoneNumber"
-                  className=" border-[1.35px] border-textBlue focus:outline-none w-[75%] px-1 py-1 rounded-md"
-                />
-              )}
-              </div>*/}
           </div>
           <div className="md:w-[220px] flex flex-col items-center w-full justify-center md:justify-start md:-translate-y-16">
             <img

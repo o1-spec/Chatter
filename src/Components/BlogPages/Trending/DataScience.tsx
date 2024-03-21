@@ -13,8 +13,10 @@ import Spinner from "../../utilities/Spinner";
 import { toast } from "react-toastify";
 import { TrendingInterface } from "./TrendingInterface";
 import { logBookmark } from "../AnalyticsFunctions";
+import { User } from "firebase/auth";
 
 function DataScience() {
+  const currentUser: User | null = auth.currentUser;
   const [loading, setLoading] = useState(true);
   const [like, setLike] = useState(false);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
@@ -274,7 +276,11 @@ function DataScience() {
                     <div className="flex items-center gap-3 sm:justify-normal">
                       <img
                         className="w-20 h-[82px] rounded-full object-cover"
-                        src={blog.icon || "/Images/user.png"}
+                        src={
+                          currentUser?.uid === blog.userId
+                            ? currentUser?.photoURL ?? ""
+                            : blog.icon ?? "/Images/user.png"
+                        }
                         alt={blog.title}
                       />
                       <div>

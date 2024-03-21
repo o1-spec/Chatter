@@ -15,6 +15,7 @@ import { TrendingInterface } from "./TrendingInterface";
 import { logBookmark } from "../AnalyticsFunctions";
 
 function Programming() {
+  const currentUser = auth.currentUser;
   const [loading, setLoading] = useState(true);
   const [like, setLike] = useState(false);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
@@ -245,7 +246,7 @@ function Programming() {
     );
   }
 
-  console.log(programBlog);
+  //console.log(programBlog);
   return (
     <div className="md:m-7 m-3 md:border border-borderIcon h-fit">
       <div className="md:max-w-[80%] mx-auto my-0 py-8 px-3 md:px-0">
@@ -269,7 +270,11 @@ function Programming() {
                     <div className="flex items-center gap-3 sm:justify-normal">
                       <img
                         className="w-20 h-[82px] rounded-full object-cover"
-                        src={blog.icon || "/Images/user.png"}
+                        src={
+                          currentUser?.uid === blog.userId
+                            ? currentUser?.photoURL ?? ""
+                            : blog.icon ?? "/Images/user.png"
+                        }
                         alt={blog.title}
                       />
                       <div>

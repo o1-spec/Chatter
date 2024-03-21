@@ -13,8 +13,10 @@ import Spinner from "../../utilities/Spinner";
 import { toast } from "react-toastify";
 import { logBookmark } from "../AnalyticsFunctions";
 import { TrendingInterface } from "./TrendingInterface";
+import { User } from "firebase/auth";
 
 function MachineLearning() {
+  const currentUser: User | null = auth.currentUser;
   const [like, setLike] = useState(false);
   const [loading, setLoading] = useState(true);
   const [totalBlogs, setTotalBlogs] = useState<TrendingInterface[]>([]);
@@ -271,7 +273,11 @@ function MachineLearning() {
                     <div className="flex items-center gap-3 sm:justify-normal">
                       <img
                         className="w-20 h-[82px] rounded-full object-cover"
-                        src={blog.icon || "/Images/user.png"}
+                        src={
+                          currentUser?.uid === blog.userId
+                            ? currentUser?.photoURL ?? ""
+                            : blog.icon ?? "/Images/user.png"
+                        }
                         alt={blog.title}
                       />
                       <div>
