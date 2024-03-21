@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Excerpts } from "./Excerpts";
 import { TrendingInterface } from "../BlogPages/Trending/TrendingInterface";
 
 interface SearchResultProp {
   filteredBlog: TrendingInterface[];
+  setSearchOpen: (searchOpen: boolean) => void;
 }
 
-function SearchResult({ filteredBlog }: SearchResultProp) {
+function SearchResult({ filteredBlog, setSearchOpen }: SearchResultProp) {
+  const navigate = useNavigate();
   console.log(filteredBlog);
   return (
     <div>
@@ -43,7 +45,12 @@ function SearchResult({ filteredBlog }: SearchResultProp) {
                       <p className="text-[15px]"></p>
                     </div>
                     <Link
-                      to={`/blog/blogSection/${blog.id}`}
+                      to=""
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate(`/blog/blogSection/${blog?.id}`);
+                        setSearchOpen(false);
+                      }}
                       className="text-xl font-semibold underline w-fit"
                     >
                       {blog.title}

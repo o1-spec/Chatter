@@ -249,7 +249,7 @@ function Programming() {
   //console.log(programBlog);
   return (
     <div className="md:m-7 m-3 md:border border-borderIcon h-fit">
-      <div className="md:max-w-[80%] mx-auto my-0 py-8 px-3 md:px-0">
+      <div className="md:max-w-[80%] mx-auto my-0 py-8 px-3 md:px-0 ">
         <div className="flex justify-between items-center pb-6">
           <div className="flex flex-col gap-4">
             <h2 className="text-3xl font-semibold">Programming</h2>
@@ -258,7 +258,7 @@ function Programming() {
             </span>
           </div>
         </div>
-        <div className="border border-borderIcon pt-5 rounded-md">
+        <div className="border border-borderIcon pt-5 rounded-md min-h-[40vh]">
           <div className="py-5 pt-1">
             {programBlog.map((blog, index) => (
               <div

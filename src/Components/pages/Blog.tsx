@@ -102,7 +102,10 @@ function Blog({ PostContext }: LogoutProps) {
             {!searchOpen ? (
               <Outlet />
             ) : (
-              <SearchResult filteredBlog={filteredBlog} />
+              <SearchResult
+                filteredBlog={filteredBlog}
+                setSearchOpen={setSearchOpen}
+              />
             )}
           </div>
         </div>
