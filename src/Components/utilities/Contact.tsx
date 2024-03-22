@@ -15,7 +15,7 @@ function Contact({
       <div className="">
         <Nav user={user} setLogin={setLogin} />
       </div>
-      <div className="py-20 pt-28 sm:pl-20 px-6 ms:px-0 border-t-2 border-t-textBlue">
+      <div className="py-20 pt-28 md:pl-20 sm:pl-8 px-6 ms:px-0 border-t-2 border-t-textBlue">
         <div className="flex flex-col items-center gap-3 justify-center">
           <h3 className="sm:text-4xl text-3xl font-semibold text-textBlue text-center">
             We have been waiting for you
