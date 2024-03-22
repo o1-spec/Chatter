@@ -31,6 +31,7 @@ import PostBlog from "./Components/utilities/PostBlog";
 import BlogSection from "./Components/BlogPages/BlogSection";
 import React from "react";
 import { User } from "firebase/auth";
+import Contact from "./Components/utilities/Contact";
 
 export interface PostContextValue {
   handleLogout: () => void;
@@ -60,7 +61,9 @@ const initialPostContextValue: PostContextValue = {
   setLogin: (_logIn: boolean) => {},
 };
 
-export const PostContext = createContext<PostContextValue>(initialPostContextValue);
+export const PostContext = createContext<PostContextValue>(
+  initialPostContextValue
+);
 
 function App() {
   const [active, setActive] = React.useState<string>("home");
@@ -112,6 +115,10 @@ function App() {
         <ToastContainer />
         <Routes>
           <Route path="/" element={<Homepage PostContext={PostContext} />} />
+          <Route
+            path="/contact"
+            element={<Contact user={user} setLogin={setLogin} />}
+          />
           <Route
             path="/login"
             element={<LoginPage PostContext={PostContext} />}

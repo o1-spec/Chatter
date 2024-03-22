@@ -54,7 +54,10 @@ function Nav({
         <li>
           <Link
             className="md:text-[16.5px] md:text-textBlack text-xl font-semibold"
-            to="/"
+            to="/#about"
+            onClick={() => {
+              setNav(false);
+            }}
           >
             About us
           </Link>
@@ -62,7 +65,7 @@ function Nav({
         <li>
           <Link
             className="md:text-[16.5px] md:text-textBlack text-xl font-semibold"
-            to="/"
+            to="/contact"
           >
             Contact
           </Link>
@@ -102,7 +105,7 @@ function Nav({
             {user.photoURL === null ? (
               <img src="/Images/user.png" className="w-10 h-10" alt="" />
             ) : (
-              <img className="w-10 h-10 rounded-full" src={user.photoURL} />
+              <img className="w-10 h-10 md:w-12 rounded-full" src={user.photoURL} />
             )}
             <span className="sm:block hidden text-sm font-semibold">
               {user.displayName}
