@@ -33,7 +33,7 @@ function Recent() {
           collection(db, "blogs"),
           (snapshot) => {
             const list: TrendingInterface[] = [];
-            snapshot.docs.forEach((doc) => {
+            snapshot?.docs.forEach((doc) => {
               list.push({ id: doc.id, ...doc.data() } as TrendingInterface);
             });
             setTotalBlogs(list);
@@ -72,12 +72,12 @@ function Recent() {
   }
 
   const handleBookmark = (blogId: string) => {
-    const isBookmarked = bookmarkedBlogs.some((blog) => blog.id === blogId);
+    const isBookmarked = bookmarkedBlogs?.some((blog) => blog?.id === blogId);
 
     let updatedBookmarks: TrendingInterface[] = [];
 
     if (isBookmarked) {
-      updatedBookmarks = bookmarkedBlogs.filter((blog) => blog.id !== blogId);
+      updatedBookmarks = bookmarkedBlogs?.filter((blog) => blog?.id !== blogId);
       toast.error("One Content removed from Bookmarks", {
         position: "bottom-left",
         autoClose: 5000,
@@ -92,7 +92,7 @@ function Recent() {
         },
       });
     } else {
-      const blogToAdd = totalBlogs.find((blog) => blog.id === blogId);
+      const blogToAdd = totalBlogs?.find((blog) => blog?.id === blogId);
       if (blogToAdd) {
         updatedBookmarks = [...bookmarkedBlogs, blogToAdd];
         toast.success("One Content Bookmarked", {
@@ -117,22 +117,22 @@ function Recent() {
   };
 
   const handleLike = async (blogId: string) => {
-    const userId: string | undefined = auth.currentUser?.uid;
+    const userId: string | undefined = auth?.currentUser?.uid;
     const blogRef = doc(db, "blogs", blogId);
     try {
       const blogSnapshot = await getDoc(blogRef);
-      const blogData = blogSnapshot.data();
+      const blogData = blogSnapshot?.data();
       const currentLikes = blogData?.likes || [];
 
       if (currentLikes.includes(userId)) {
-        const updatedLikes = currentLikes.filter(
+        const updatedLikes = currentLikes?.filter(
           (id: string | undefined) => id !== userId
         );
         await updateDoc(blogRef, { likes: updatedLikes });
 
         setTotalBlogs((prevBlogs) => {
-          return prevBlogs.map((blog) => {
-            if (blog.id === blogId) {
+          return prevBlogs?.map((blog) => {
+            if (blog?.id === blogId) {
               return { ...blog, likes: updatedLikes };
             } else {
               return blog;
@@ -159,8 +159,8 @@ function Recent() {
         await updateDoc(blogRef, { likes: updatedLikes });
 
         setTotalBlogs((prevBlogs) => {
-          return prevBlogs.map((blog) => {
-            if (blog.id === blogId) {
+          return prevBlogs?.map((blog) => {
+            if (blog?.id === blogId) {
               return { ...blog, likes: updatedLikes };
             } else {
               return blog;
@@ -203,7 +203,7 @@ function Recent() {
   console.log(totalBlogs);
 
   const recentBlogs = totalBlogs.filter((blog) => {
-    return blog.comments.length > 0;
+    return blog?.comments?.length > 0;
   });
 
   console.log(recentBlogs);
@@ -230,19 +230,19 @@ function Recent() {
                   <img
                     className="w-20 h-[82px] rounded-full object-cover"
                     src={
-                      currentUser?.uid === blog.userId
+                      currentUser?.uid === blog?.userId
                         ? currentUser?.photoURL ?? ""
-                        : blog.icon ?? "/Images/user.png"
+                        : blog?.icon ?? "/Images/user.png"
                     }
-                    alt={blog.title}
+                    alt={blog?.title}
                   />
                   <div>
                     <p className="font-semibold sm:text-xl text-lg">
-                      {blog.author}
+                      {blog?.author}
                     </p>
                     <p className="flex flex-col gap-1 sm:gap-2">
                       <span className="text-[15px] sm:text-[16px]">
-                        {blog.category}
+                        {blog?.category}
                       </span>
                       <span className="text-sm">
                         {blog?.createdAt?.toDate().toLocaleDateString("en-US", {
@@ -255,42 +255,42 @@ function Recent() {
                   </div>
                 </div>
                 <Link
-                  to={`/blog/blogSection/${blog.id}`}
+                  to={`/blog/blogSection/${blog?.id}`}
                   className="sm:text-2xl text-xl font-semibold underline"
                 >
-                  {blog.title}
+                  {blog?.title}
                 </Link>
                 <p className="text-[15px] md:text-[16px] pr-6">
                   {Excerpts(blog?.description, 250)}
                 </p>
                 <img
                   className="w-fit"
-                  src={blog.imageUrl || blog.imgUrl}
-                  alt={blog.title}
+                  src={blog?.imageUrl || blog?.imgUrl}
+                  alt={blog?.title}
                 />
               </div>
               <div className="flex items-center justify-between pt-4 pb-4">
                 <div className="flex items-center gap-2">
                   <i
-                    onClick={() => handleLike(blog.id)}
+                    onClick={() => handleLike(blog?.id)}
                     className={
                       like
                         ? "fa-regular fa-heart cursor-pointer text-textBlue"
                         : "fa-regular fa-heart cursor-pointer"
                     }
                   ></i>
-                  <span className="text-sm">{blog.likes.length}</span>
+                  <span className="text-sm">{blog?.likes?.length}</span>
                 </div>
                 <div
                   className="flex items-center gap-2"
                   onClick={() => {
                     logBookmark(blog?.id, blog?.title);
-                    handleBookmark(blog.id);
+                    handleBookmark(blog?.id);
                   }}
                 >
                   <i
                     className={
-                      bookmarkedBlogs.some((b) => b.id === blog.id)
+                      bookmarkedBlogs.some((b) => b?.id === blog?.id)
                         ? "fa-regular fa-bookmark text-textBlue cursor-pointer"
                         : "fa-regular fa-bookmark cursor-pointer"
                     }
@@ -299,7 +299,7 @@ function Recent() {
                 <div className="flex items-center gap-2">
                   <img src="/Images/analytics.svg" className="w-3" alt="" />
                   <span className="text-sm">
-                    {blog.views || blog.view.length}
+                    {blog?.views || blog?.view.length}
                   </span>
                 </div>
               </div>
