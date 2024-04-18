@@ -95,11 +95,11 @@ function TeamBlogs({ user }: { user: User | null }) {
   //console.log("blogs", blogs);
   //console.log(user.uid)
   return (
-    <div className="m-7 border border-borderIcon rounded-md min-h-[100vh]">
-      <div className="px-8 md:pt-8 py-6 h-full">
+    <div className="md:m-7 m-3 md:border border-borderIcon rounded-md min-h-[100vh]">
+      <div className="px-4 sm:px-5 md:px-8 md:pt-8 py-6 h-full">
         <h3 className="text-4xl text-textBlack font-semibold">Your Stories</h3>
-        <div className="flex flex-col gap-8 pt-8">
-          {teamBlogs.length === 0 ? (
+        <div className="flex flex-col gap-12 md:gap-8 pt-8">
+          {teamBlogs.length === 0 ? ( 
             <div className="flex items-center justify-center flex-col gap-3">
               <p className="text-2xl">Empty</p>
               <Link
@@ -112,9 +112,9 @@ function TeamBlogs({ user }: { user: User | null }) {
           ) : (
             <>
               {teamBlogs.map((blog, id) => (
-                <div key={id} className="flex items-start gap-4 w-full">
+                <div key={id} className="flex flex-col md:flex-row items-start gap-4 w-full">
                   <img
-                    className="w-80 h-52 rounded-md"
+                    className=" md:w-[340px] md:h-52 w-full h-64  rounded-md"
                     src={blog?.imageUrl || blog.imgUrl}
                     alt={blog?.title}
                   />
@@ -123,7 +123,7 @@ function TeamBlogs({ user }: { user: User | null }) {
                       {blog?.category}
                     </span>
                     <div className="flex gap-2 items-center">
-                      <p className="font-semibold text-[18px]">
+                      <p className="font-semibold md:text-[18px] text-xl">
                         {blog?.author}
                       </p>
                       <p className="text-[15px]"></p>
@@ -134,8 +134,8 @@ function TeamBlogs({ user }: { user: User | null }) {
                     >
                       {blog?.title}
                     </Link>
-                    <span>{Excerpts(blog?.description, 120)}</span>
-                    <div className="flex items-center gap-2 justify-between w-full">
+                    <span className="text-md md:text-base">{Excerpts(blog?.description, 120)}</span>
+                    <div className="flex items-center gap-2 justify-between w-full pt-3 md:pt-1">
                       <img
                         className="w-6 cursor-pointer"
                         src="/Images/pencil.svg"

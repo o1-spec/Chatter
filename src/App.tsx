@@ -32,6 +32,7 @@ import BlogSection from "./Components/BlogPages/BlogSection";
 import React from "react";
 import { User } from "firebase/auth";
 import Contact from "./Components/utilities/Contact";
+import PrivateRoutes from "./Components/helpers/PrivateRoutes";
 
 export interface PostContextValue {
   handleLogout: () => void;
@@ -124,39 +125,47 @@ function App() {
             element={<LoginPage PostContext={PostContext} />}
           />
           <Route path="/confirmation" element={<Confirmation />} />
-          <Route path="/blog" element={<Blog PostContext={PostContext} />}>
-            <Route path="/blog/feed" element={<Feed />} />
-            <Route path="/blog/bookmark" element={<Bookmark />} />
-            <Route path="/blog/teamBlogs" element={<TeamBlogs user={user} />} />
-            <Route path="/blog/drafts" element={<Drafts />} />
-            <Route path="/blog/analytics" element={<Analytics />} />
-            <Route path="/blog/programming" element={<Programming />} />
-            <Route path="/blog/dataScience" element={<DataScience />} />
-            <Route path="/blog/technology" element={<Technology />} />
-            <Route path="/blog/machineLearning" element={<MachineLearning />} />
-            <Route path="/blog/politics" element={<Politics />} />
-            <Route path="/blog/all" element={<See />} />
-            <Route
-              path="/blog/account"
-              element={<Account PostContext={PostContext} />}
-            />
-            <Route path="/blog/notification" element={<Notification />} />
-            <Route
-              path="/blog/blogSection/:id"
-              element={<BlogSection PostContext={PostContext} />}
-            />
-            <Route
-              path="/blog/updateBlog/:id"
-              element={<PostBlog PostContext={PostContext} />}
-            />
-            <Route
-              path="/blog/postBlog"
-              element={<PostBlog PostContext={PostContext} />}
-            />
-            <Route
-              path="/blog/logout"
-              element={<Logout PostContext={PostContext} />}
-            />
+          <Route element={<PrivateRoutes />}>
+            <Route path="/blog" element={<Blog PostContext={PostContext} />}>
+              <Route path="/blog/feed" element={<Feed />} />
+              <Route path="/blog/bookmark" element={<Bookmark />} />
+              <Route
+                path="/blog/teamBlogs"
+                element={<TeamBlogs user={user} />}
+              />
+              <Route path="/blog/drafts" element={<Drafts />} />
+              <Route path="/blog/analytics" element={<Analytics />} />
+              <Route path="/blog/programming" element={<Programming />} />
+              <Route path="/blog/dataScience" element={<DataScience />} />
+              <Route path="/blog/technology" element={<Technology />} />
+              <Route
+                path="/blog/machineLearning"
+                element={<MachineLearning />}
+              />
+              <Route path="/blog/politics" element={<Politics />} />
+              <Route path="/blog/all" element={<See />} />
+              <Route
+                path="/blog/account"
+                element={<Account PostContext={PostContext} />}
+              />
+              <Route path="/blog/notification" element={<Notification />} />
+              <Route
+                path="/blog/blogSection/:id"
+                element={<BlogSection PostContext={PostContext} />}
+              />
+              <Route
+                path="/blog/updateBlog/:id"
+                element={<PostBlog PostContext={PostContext} />}
+              />
+              <Route
+                path="/blog/postBlog"
+                element={<PostBlog PostContext={PostContext} />}
+              />
+              <Route
+                path="/blog/logout"
+                element={<Logout PostContext={PostContext} />}
+              />
+            </Route>
           </Route>
         </Routes>
       </PostContext.Provider>
