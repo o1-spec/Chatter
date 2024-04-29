@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PostContextValue } from "../../../App";
+import Spinner from "../../utilities/Spinner";
 
 interface Logout {
   PostContext: React.Context<PostContextValue>;
@@ -8,7 +9,16 @@ interface Logout {
 
 function Logout({ PostContext }: Logout) {
   const { handleLogout, setLogin } = useContext(PostContext);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  if (loading) {
+    return (
+      <div className="mt-48">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="fixed">
@@ -23,6 +33,7 @@ function Logout({ PostContext }: Logout) {
                 handleLogout();
                 navigate("/login");
                 setLogin(true);
+                setLoading(true);
               }}
               className="text-textBlack text-[15px] bg-textWhite px-12 py-2 rounded-lg transition"
             >
