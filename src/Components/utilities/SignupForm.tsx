@@ -248,7 +248,7 @@ function SignupForm({ setUser, setLogin }: SignFormProps) {
             />
             <img
               className="cursor-pointer absolute right-2 top-3"
-              src="/Images/eye.svg"
+              src={!showPassword ? "/Images/eye.svg" : "/Images/eye_2.svg"}
               alt="eye-img"
               onClick={togglePasswordVisibility}
             />
@@ -267,8 +267,9 @@ function SignupForm({ setUser, setLogin }: SignFormProps) {
             />
             <img
               className="cursor-pointer absolute right-2 top-3"
-              src="/Images/eye.svg"
+              src={!showPassword ? "/Images/eye.svg" : "/Images/eye_2.svg"}
               alt="eye-img"
+              onClick={togglePasswordVisibility}
             />
           </div>
         </div>

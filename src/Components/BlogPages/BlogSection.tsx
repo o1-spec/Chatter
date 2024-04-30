@@ -172,7 +172,10 @@ function BlogSection({ PostContext }: BlogSectionProp) {
 
   return (
     <div className="py-8 px-3">
-      <div className="flex flex-col gap-10 md:mx-32 mx-2">
+      <div
+        className="flex flex-col gap-10 md:mx-32 mx-2"
+        key={selectedBlog?.id}
+      >
         <img
           className="md:w-[750px] w-fit md:h-[430px] h-[330px]"
           src={selectedBlog?.imgUrl || selectedBlog?.imageUrl}
@@ -216,7 +219,7 @@ function BlogSection({ PostContext }: BlogSectionProp) {
             ) : (
               <>
                 {selectedBlog?.comments?.map((comment, index) => (
-                  <Comments comment={comment} index={index} />
+                  <Comments comment={comment} index={index} key={index} />
                 ))}
               </>
             )}

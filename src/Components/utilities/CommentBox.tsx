@@ -24,11 +24,11 @@ function CommentBox({
   const rows: number = 4;
   return (
     <div>
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form onSubmit={(e) => handleSubmit(e)} className="flex gap-2 flex-col">
         <textarea
           rows={rows}
           value={userComment}
-          className="focus:outline-textBlue border-1 border-textBlack w-[60vw]"
+          className="focus:outline-textBlue border-2 border-textBlack sm:w-[60vw] w-[80vw] p-2"
           onChange={(e) => setUserComment(e.target.value)}
         ></textarea>
         {!userId ? (

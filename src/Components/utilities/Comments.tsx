@@ -1,10 +1,10 @@
+import { Timestamp } from "firebase/firestore";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 interface CommentProp {
   comment: {
     body: string;
-    createdAt: {
-      seconds: number;
-    };
+    createdAt: Timestamp;
     name: string;
   };
   index: number;
@@ -19,7 +19,13 @@ function Comments({ comment, index }: CommentProp) {
         <h6 className="font-semibold text-[17px]">{name}</h6>
         <div className="flex justify-between gap-4">
           <p className="text-[15px]">{body}</p>
-          <p>{createdAt.seconds}</p>
+          <p>
+            {createdAt?.toDate().toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
         </div>
       </div>
     </div>
