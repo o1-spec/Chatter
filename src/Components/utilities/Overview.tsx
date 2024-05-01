@@ -15,7 +15,7 @@ function Overview({
   activeLink,
   setBlogNav,
   setActiveLink,
-  setSearchOpen
+  setSearchOpen,
 }: OverviewProps) {
   const handleLinkClick = (linkName: string) => {
     if (activeLink === linkName) {
@@ -39,7 +39,7 @@ function Overview({
             }`}
             to="/blog/feed"
             onClick={() => {
-              setSearchOpen(false)
+              setSearchOpen(false);
               setBlogNav(false);
               handleLinkClick("feed");
             }}
@@ -55,7 +55,7 @@ function Overview({
             }`}
             to="/blog/bookmark"
             onClick={() => {
-              setSearchOpen(false)
+              setSearchOpen(false);
               setBlogNav(false);
               handleLinkClick("bookmark");
             }}
@@ -75,7 +75,7 @@ function Overview({
             }`}
             to="/blog/teamBlogs"
             onClick={() => {
-              setSearchOpen(false)
+              setSearchOpen(false);
               setBlogNav(false);
               handleLinkClick("teamBlogs");
             }}
@@ -88,7 +88,7 @@ function Overview({
             <span>Team Blogs</span>
           </Link>
         </li>
-        <li>
+        {/*<li>
           <Link
             className={`flex items-center w-fit gap-3 text-[15px] ${
               activeLink === "drafts" && blue ? "text-textBlue" : ""
@@ -103,7 +103,7 @@ function Overview({
             <img src="/Images/drafts.svg" className="w-3" alt="Drafts-img" />
             <span>Drafts</span>
           </Link>
-        </li>
+          </li>*/}
         <li>
           <Link
             className={`flex items-center w-fit gap-3 text-[15px] ${
@@ -111,7 +111,7 @@ function Overview({
             }`}
             to="/blog/analytics"
             onClick={() => {
-              setSearchOpen(false)
+              setSearchOpen(false);
               setBlogNav(false);
               handleLinkClick("analytics");
             }}
